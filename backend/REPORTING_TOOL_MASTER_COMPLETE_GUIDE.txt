@@ -1,0 +1,1265 @@
+REPORTING TOOL — COMPLETE CONSOLIDATED IMPLEMENTATION GUIDE
+================================================================
+
+This is the single practical runbook consolidating the original Steps 1–9C
+plus the later 9D, 9E, Step 10 and Step 11 work.
+
+RULES
+-----
+• Preserve existing functionality.
+• Do not delete a source file because its filename says Step, Fixed, Updated,
+  Backup, Final, Complete, Old, etc. Compare functionality first.
+• Current MySQL/MongoDB sources are SAMPLE/TEST databases.
+• MAX_QUERY_ROWS=0 means dynamic/no artificial report-row ceiling.
+• Preview/visualization remain browser-bounded.
+• Never place real passwords, SECRET_KEY, ENCRYPTION_KEY, JWTs or password
+  hashes in source control or chat.
+• SECRET_KEY and ENCRYPTION_KEY are separate secrets.
+• Never regenerate ENCRYPTION_KEY after real credentials are encrypted.
+• Production application-state backup is separate from production DB backup.
+
+
+================================================================
+STEP 1 — CONFIGURATION FOUNDATION
+================================================================
+Files:
+  config.py
+  .env.example
+  requirements.txt
+  .gitignore
+
+Install:
+  python -m pip install -r requirements.txt
+
+Test:
+  python -m py_compile config.py
+  python -c "from config import configuration_summary; print(configuration_summary())"
+
+Do not replace main.py in this phase.
+
+
+================================================================
+STEP 2A — SECRET ENCRYPTION / KEY MANAGEMENT
+================================================================
+File:
+  security.py
+
+Generate locally:
+  python -c "from security import generate_encryption_key; print(generate_encryption_key())"
+
+Put the generated value only in the REAL .env:
+  ENCRYPTION_KEY=<generated-value>
+
+Verify:
+  python -m py_compile security.py
+
+Encryption test after configuring the key:
+  python -c "from security import encrypt_secret,decrypt_secret; x='Step2A-Test'; y=encrypt_secret(x); print('encrypted:', y); print('decrypted:', decrypt_secret(y))"
+
+Expected:
+  encrypted starts with gAAAAA...
+  decrypted = Step2A-Test
+
+Keep a secure copy of ENCRYPTION_KEY.
+
+
+================================================================
+STEP 2B — SECURE CONNECTION REGISTRY
+================================================================
+Purpose:
+  Encrypt saved DB passwords at rest.
+
+Before migration:
+  Copy-Item .\data\connections.json .\data\connections.json.manual_backup
+
+Automatic migration backup:
+  connections.json.pre_encryption.bak
+
+Behavior:
+  • list_connections() never returns passwords.
+  • Runtime get_connection() decrypts only in memory.
+  • Plaintext credentials are migrated safely.
+  • Existing IDs/metadata remain unchanged.
+  • Wrong/missing key fails safely.
+
+Tests:
+  python -m py_compile connection_registry.py
+
+  python -c "from connection_registry import list_connections; print(list_connections())"
+
+  Get-Content .\data\connections.json
+
+  python -c "from connection_registry import list_connections,get_connection; items=list_connections(); print('connections:',len(items)); print('password_hidden:',all('password' not in x for x in items)); print('runtime_lookup:',bool(get_connection(items[0]['id'])) if items else 'no connections')"
+
+Never paste real credentials.
+
+
+================================================================
+STEP 3A — AUTHENTICATION FOUNDATION
+================================================================
+File:
+  auth.py
+
+Provides:
+  PBKDF2-HMAC-SHA256 password hashing
+  password verification
+  signed authentication tokens
+  expiration
+  safe user responses
+
+Generate SECRET_KEY locally:
+  python -c "import secrets; print(secrets.token_urlsafe(48))"
+
+Put only in real .env:
+  SECRET_KEY=<generated-value>
+
+Test:
+  python -m py_compile auth.py
+
+  python -c "from auth import hash_password,verify_password; h=hash_password('Step3A-Test'); print('hash_created:',h.startswith('pbkdf2_sha256$')); print('correct_password:',verify_password('Step3A-Test',h)); print('wrong_password:',verify_password('WrongPassword',h))"
+
+
+================================================================
+STEP 3B — USER REGISTRY
+================================================================
+File:
+  user_registry.py
+
+Stores:
+  backend/data/users.json
+
+Roles:
+  admin
+  report_user
+
+Passwords are hashes only.
+
+Test:
+  python -m py_compile user_registry.py
+
+Create an initial administrator locally using your own strong password:
+  python -c "from user_registry import create_user; print(create_user('admin','YOUR_STRONG_PASSWORD','admin'))"
+
+Verify:
+  Get-Content .\data\users.json
+  python -c "from user_registry import list_users; print(list_users())"
+
+Inactive users must fail authentication.
+
+
+================================================================
+STEP 3C — AUTHENTICATION API
+================================================================
+File:
+  auth_api.py
+
+Endpoints:
+  POST /auth/login
+  GET  /auth/me
+  POST /auth/logout
+
+Test:
+  python -m py_compile auth_api.py
+
+Login returns a signed bearer token and safe user data.
+It must never return password/password_hash.
+
+
+================================================================
+STEP 3C — SWAGGER / BEARER FIX
+================================================================
+auth.py and auth_api.py use HTTPBearer.
+
+Verify:
+  python -m py_compile auth.py
+  python -m py_compile auth_api.py
+
+Restart Uvicorn completely:
+  CTRL+C
+  uvicorn main:app --reload --host 127.0.0.1 --port 8000
+
+OpenAPI:
+  python -c "import urllib.request,json; x=json.load(urllib.request.urlopen('http://127.0.0.1:8000/openapi.json')); print('SECURITY SCHEMES:',x.get('components',{}).get('securitySchemes')); print('ME SECURITY:',x['paths']['/auth/me']['get'].get('security'))"
+
+Expected:
+  BearerAuth HTTP bearer/JWT
+  /auth/me contains BearerAuth
+
+Swagger:
+  http://127.0.0.1:8000/docs
+
+
+================================================================
+STEP 3C — main.py AUTH ROUTER INTEGRATION
+================================================================
+main.py contains:
+  from auth_api import router as auth_router
+  app.include_router(auth_router)
+
+Verify:
+  python -m py_compile main.py
+
+Existing reporting endpoints remain present.
+
+
+================================================================
+STEP 3D — API AUTHENTICATION PROTECTION
+================================================================
+Files:
+  auth.py
+  auth_api.py
+  auth_session_registry.py
+  main.py
+
+Public:
+  GET /
+  GET /health
+  POST /auth/login
+  Swagger/OpenAPI
+
+Existing datasource, dataset, report, export, visualization, JOIN and
+report-query APIs require Bearer authentication.
+
+Logout revocation:
+  backend/data/auth_sessions.db
+
+Compile:
+  python -m py_compile auth.py
+  python -m py_compile auth_api.py
+  python -m py_compile auth_session_registry.py
+  python -m py_compile main.py
+
+With token:
+  GET /datasource/connections -> 200
+  GET /datasets -> 200
+  GET /reports -> 200
+  GET /report/capabilities -> 200
+
+Without token:
+  protected endpoints -> 401
+
+
+================================================================
+STEP 4 — CUSTOM USER PERMISSIONS
+================================================================
+Backend:
+  permissions.py
+  user_registry.py
+  auth.py
+  auth_api.py
+  main.py
+
+Frontend:
+  App.jsx
+  UserManagement.jsx / ManageUsers.jsx
+
+Features:
+  • Admin-only User Management.
+  • Custom users.
+  • Granular permissions.
+  • Role/permission/password/active-state editing.
+  • Administrator protection.
+  • Backend permission enforcement.
+  • Existing report_user workflow preserved.
+
+Test:
+  python -m py_compile permissions.py user_registry.py auth.py auth_api.py main.py
+
+Verify allowed operations work and denied operations return 403.
+
+
+================================================================
+STEP 5A — CONNECTION-LEVEL DATA ACCESS CONTROL
+================================================================
+Files:
+  connection_access.py
+  connection_registry.py
+  main.py
+
+Rules:
+  • Existing connections without ACL remain available.
+  • Admin always has access.
+  • New non-admin connections are private to creator.
+  • Connection operations enforce access.
+  • Dataset create/update checks connection access.
+  • Report query/export checks all referenced connection IDs.
+  • Admin ACL supports all/restricted modes.
+  • ACL stored separately in data/connection_access.json.
+  • No passwords in ACL.
+
+Do not replace:
+  data/connections.json
+  data/users.json
+
+
+================================================================
+STEP 6 — DYNAMIC DATASET CAPACITY
+================================================================
+Core:
+  MAX_QUERY_ROWS=0
+
+Meaning:
+  No artificial application report-row ceiling.
+
+Preview and visualization remain bounded.
+
+Files:
+  config.py
+  main.py
+  database.py
+  connection_registry.py
+  connection_access.py
+
+Test:
+  python -m py_compile config.py database.py connection_access.py connection_registry.py main.py
+
+GET /system/capacity
+
+Expected:
+  report_row_limit = 0
+  report_row_limit_mode = dynamic
+
+
+================================================================
+STEP 6B — QUERY EXECUTION PROTECTION
+================================================================
+Defaults:
+  QUERY_TIMEOUT_SECONDS=120
+  MAX_REQUEST_BODY_MB=10
+  MAX_JOIN_OPERATIONS=25
+  MAX_QUERY_ROWS=0
+
+These protect execution/request size without imposing a report row ceiling.
+
+Important:
+  A Python timeout is not a guarantee that the underlying database query
+  was cancelled. Connector-specific hard cancellation remains separate.
+
+
+================================================================
+STEP 7 — PRODUCTION & AUDIT LOGGING
+================================================================
+Files:
+  logging_config.py
+  config.py
+  main.py
+  permissions.py
+
+Logs:
+  backend/logs/application.log
+  backend/logs/audit.log
+
+Rotation:
+  application.log: 10 MB x 5
+  audit.log:       10 MB x 10
+
+Admin:
+  GET /admin/audit-log
+
+Never log:
+  passwords
+  tokens
+  request bodies
+  query strings
+  Authorization headers
+  secrets
+
+Test:
+  python -m py_compile config.py permissions.py logging_config.py main.py
+
+
+================================================================
+STEP 8 — BACKUP & RECOVERY FOUNDATION
+================================================================
+backup_manager.py backs up application state:
+
+  data/users.json
+  data/connections.json
+  data/saved_reports.json
+  data/datasets.json
+  data/connection_access.json when present
+
+Does NOT back up:
+  ENCRYPTION_KEY
+  plaintext passwords
+  logs
+  DB contents
+
+CLI:
+  python backup_manager.py create
+  python backup_manager.py list
+  python backup_manager.py validate .\backups\<file>.tar.gz
+
+Restore:
+  python backup_manager.py restore .\backups\<file>.tar.gz --overwrite
+
+Admin:
+  POST /admin/backups
+  GET  /admin/backups
+
+
+================================================================
+STEP 8B — BACKUP INTEGRITY / SAFE RECOVERY TEST
+================================================================
+Validate:
+  python backup_manager.py validate .\backups\<file>.tar.gz
+
+Safe test:
+  python backup_manager.py recover-test .\backups\<file>.tar.gz
+
+Staging:
+  backend\backups\_recovery_check\
+
+Must report:
+  live_data_changed=false
+
+It never overwrites live state.
+
+Admin:
+  POST /admin/backups/recovery-test?archive=<backup filename>
+
+
+================================================================
+STEP 8C — SERVER-READY BACKUP RETENTION / EXTERNAL TARGET
+================================================================
+Configuration:
+  BACKUP_RETENTION_COUNT=10
+  BACKUP_EXTERNAL_DIR=
+
+Examples:
+  Windows/NAS:
+    BACKUP_EXTERNAL_DIR=\\backup-server\reporting-tool
+
+  Linux:
+    BACKUP_EXTERNAL_DIR=/srv/backups/reporting-tool
+
+Do NOT point external directory to backend\backups.
+
+CLI:
+  python backup_manager.py create
+  python backup_manager.py list
+  python backup_manager.py retention
+  python backup_manager.py external-copy .\backups\<file>.tar.gz
+
+External-copy failure must not remove the local recovery point.
+
+
+================================================================
+STEP 9 — LARGE-DATA EXECUTION FOUNDATION
+================================================================
+Policies:
+  QUERY_CHUNK_SIZE=5000
+  MAX_JOIN_MEMORY_MB=1024
+  MAX_EXPORT_FILE_MB=2048
+
+Architecture:
+  1. Push filters to DB.
+  2. Prefer DB aggregation.
+  3. Prefer safe source-local DB JOINs.
+  4. Transfer only required columns.
+  5. Stream/chunk large results.
+  6. Bound browser rendering.
+  7. Keep full processing server-side.
+  8. Protect resources independently of row capacity.
+
+This does NOT mean arbitrary 50M-row cross-source JOINs are automatically
+safe or scalable.
+
+
+================================================================
+STEP 9B — PUSHDOWN / STREAMING FOUNDATION
+================================================================
+Files:
+  query_pushdown.py
+  streaming.py
+
+Configuration:
+  QUERY_PUSHDOWN_ENABLED=true
+  QUERY_CHUNK_SIZE=5000
+
+Structured planner supports:
+  filters
+  projection
+  GROUP BY
+  aggregations
+  sorting
+
+Unsupported/unsafe operations remain application-side.
+No raw user SQL is generated.
+
+Streaming:
+  cursor fetchmany(chunk_size)
+  or bounded batch iteration.
+
+Test:
+  python -m py_compile config.py query_pushdown.py streaming.py main.py
+
+
+================================================================
+STEP 9C — ACTUAL MYSQL PUSHDOWN + STREAMING
+================================================================
+Implemented:
+  • physical-field filter pushdown
+  • column projection
+  • unbuffered cursor + fetchmany
+  • safe identifier quoting
+  • parameter binding
+  • AND-only filter pushdown
+  • unsupported/OR expressions stay application-side
+
+Supported operators:
+  = != > < >= <=
+  CONTAINS STARTS_WITH ENDS_WITH NOT_CONTAINS
+  IS_NULL IS_NOT_NULL IN NOT_IN BETWEEN
+
+Cross-source JOINs are not claimed to be database-side.
+Python still handles the existing cross-source JOIN semantics.
+
+Expected report diagnostics:
+  query_pushdown.mysql_filters_pushed > 0
+
+
+================================================================
+STEP 9D — ACTUAL MONGODB PUSHDOWN + BATCH STREAMING
+================================================================
+Implemented:
+  • structured aggregation pipeline
+  • $match filter pushdown
+  • $project projection
+  • $sort where safe
+  • $limit for source-local non-join reads
+  • aggregation cursor batchSize=5000
+  • allowDiskUse=True
+  • structured BSON values instead of raw query strings
+
+Supported operators match the safe structured filter set.
+
+MongoDB pushdown is source-local.
+Cross-database JOIN behavior remains unchanged.
+
+Expected:
+  query_pushdown.mongodb_filters_pushed > 0
+  mongodb_pipeline_enabled = true
+  mongodb_batch_streaming_enabled = true
+
+
+================================================================
+STEP 9D FIX — MONGODB CONNECTION HELPER
+================================================================
+Problem:
+  database.py referenced create_mongodb_client() while the existing connector
+  uses create_mongo_connection().
+
+Fix:
+  Reuse create_mongo_connection().
+  No second MongoDB connection mechanism is introduced.
+
+No frontend/data changes.
+
+Expected:
+  mongodb_filters_pushed >= 1
+  mongodb_projection_enabled = true
+  mongodb_pipeline_enabled = true
+  mongodb_batch_streaming_enabled = true
+
+
+================================================================
+STEP 9E — CROSS-SOURCE / SAME-SOURCE JOIN OPTIMIZATION
+================================================================
+Added:
+  join_engine.py
+
+Design:
+  • Same connection + same source type + supported JOIN:
+      candidate for source-local optimization.
+  • MySQL <-> MongoDB or different connections:
+      existing cross-source JOIN engine remains semantic authority.
+  • Hash JOIN avoids an artificial row ceiling.
+  • Future source-specific planning can use row estimates.
+
+Diagnostics:
+  same-source candidate:
+    query_pushdown.join_strategy = same_source_optimized_candidate
+
+cross-source:
+    query_pushdown.join_strategy = existing_join_engine
+    cross_source_join_supported = true
+
+
+================================================================
+STEP 9E + STEP 10 FIXES — JOIN OUTPUT + JOB PAYLOAD
+================================================================
+Fixes:
+  1. Same-source optimized JOIN now preserves requested report columns.
+  2. Aliases are preserved.
+  3. No {} rows from optimized JOIN output.
+  4. Report column metadata follows requested field/alias contract.
+  5. Background execution passes:
+       datasets
+       joins
+       columns
+       filters
+       sorts
+       group_by
+       aggregations
+       calculated_columns
+       limit
+     to the existing report executor.
+
+Same MongoDB collection test:
+  22 documents each side should produce 22 matching rows when
+  Meter_Serial_Number is unique.
+
+
+================================================================
+STEP 9E FINAL FIX — MONGODB FIELD QUALIFICATION
+================================================================
+Root cause:
+  MongoDB pushdown returned bare field names while the JOIN engine expects
+  source-qualified keys such as:
+    mongo_a.Meter_Serial_Number
+
+Fix:
+  Every MongoDB returned field is qualified by dataset ID.
+
+Also removed the erroneous undefined local variable "rows".
+
+Expected:
+  22 source documents -> 22 matching rows for unique meter serial numbers.
+  Requested columns contain fully-qualified names.
+  rows contain actual values, not {}.
+
+
+================================================================
+STEP 10 — PRODUCTION EXECUTION & RESOURCE MANAGEMENT
+================================================================
+Background APIs:
+  POST /execution/jobs
+  GET  /execution/jobs
+  GET  /execution/jobs/{job_id}
+  POST /execution/jobs/{job_id}/cancel
+
+Lifecycle:
+  queued -> running -> completed / failed / cancelled
+
+Resource controls:
+  MAX_CONCURRENT_REPORTS = default 2
+  REPORT_RESOURCE_WAIT_SECONDS controls queue/back-pressure
+  REPORT_JOB_RETENTION_SECONDS = default 3600
+
+Synchronous /report/query remains available and uses the same resource guard.
+
+Large-data rules remain:
+  MAX_QUERY_ROWS=0
+  pushdown enabled
+  MySQL/MongoDB pushdown intact
+  streaming/chunking intact
+  no artificial 500K/5M/50M ceiling
+
+Important:
+  Current job manager is process-local.
+  For multi-worker/multi-instance production use a shared job/lock backend
+  such as Redis + Celery/RQ or equivalent.
+
+Security:
+  Prefer connection_id-based credential resolution rather than sending
+  raw database passwords in job payloads.
+
+Background job normalization fixes the positional-argument mismatch that
+previously caused an immediate job failure.
+
+
+================================================================
+STEP 11 — PRODUCTION SECURITY + FRONTEND INTEGRATION
+================================================================
+Backend:
+  production_security.py
+  GET /system/security for authenticated administrators
+  production environment template
+  secret-redaction helper
+  production checks for JWT secret and credentialed wildcard CORS
+  server concurrency configuration
+
+Preserved:
+  authentication
+  authorization
+  query
+  JOIN
+  pushdown
+  backup
+  reports
+  execution
+  MAX_QUERY_ROWS=0
+  sample DB/data
+  ClickHouse disabled
+
+Frontend:
+  VITE_API_BASE_URL is environment-configurable.
+  Existing Authorization: Bearer behavior remains.
+  Added:
+    hasPermission
+    hasAnyPermission
+    hasAllPermissions
+  Existing login/session/current-user flow remains intact.
+  No report-builder UI redesign is introduced.
+
+LOCAL TEST
+----------
+1. Configure backend environment.
+2. Keep APP_ENV=development for local testing.
+3. Set:
+     VITE_API_BASE_URL=<backend URL>
+4. Start backend.
+5. Start frontend.
+6. Login.
+7. Test Data Sources.
+8. Test Preview.
+9. Test JOIN.
+10. Test Report Builder.
+11. Admin tests GET /system/security.
+
+
+================================================================
+FINAL PRODUCTION CHECKLIST
+================================================================
+
+CONFIGURATION
+-------------
+[ ] SECRET_KEY configured.
+[ ] ENCRYPTION_KEY configured separately.
+[ ] Secrets outside source control.
+[ ] MAX_QUERY_ROWS=0 or intentionally approved limit.
+[ ] Query timeout/request/JOIN/resource limits configured.
+[ ] Concurrent report and job retention settings configured.
+[ ] Production CORS origins explicitly configured.
+[ ] VITE_API_BASE_URL points to production backend.
+
+SECURITY
+--------
+[ ] Saved passwords encrypted.
+[ ] Passwords hidden from API responses.
+[ ] Login works.
+[ ] BearerAuth visible in Swagger.
+[ ] Protected endpoints return 401 without authentication.
+[ ] Permission failures return 403.
+[ ] Connection ACL works.
+[ ] Audit logs contain no secrets.
+[ ] GET /system/security passes.
+
+DATA SOURCES
+------------
+[ ] MySQL test succeeds.
+[ ] MongoDB test succeeds.
+[ ] Database/table/collection browsing works.
+[ ] Preview works.
+[ ] Saved connections work.
+
+QUERY ENGINE
+------------
+[ ] MySQL filter pushdown verified.
+[ ] MySQL projection verified.
+[ ] MySQL streaming verified.
+[ ] MongoDB $match pushdown verified.
+[ ] MongoDB projection/pipeline verified.
+[ ] MongoDB batch streaming verified.
+[ ] Unsafe filters remain application-side.
+[ ] No artificial report-row ceiling reintroduced.
+
+JOIN ENGINE
+-----------
+[ ] Same-source JOIN returns actual requested fields.
+[ ] No {} output.
+[ ] MongoDB field names remain source-qualified.
+[ ] MongoDB + MongoDB JOIN works.
+[ ] MySQL + MongoDB JOIN works.
+[ ] JOIN diagnostics are correct.
+[ ] INNER/LEFT/null/duplicate-key semantics regression-tested.
+
+REPORTING
+---------
+[ ] Filters.
+[ ] Sorting.
+[ ] Grouping.
+[ ] Aggregations.
+[ ] Calculated columns.
+[ ] Saved reports.
+[ ] CSV export.
+[ ] Visualization.
+[ ] Browser remains bounded.
+
+BACKGROUND JOBS
+---------------
+[ ] execute job queues.
+[ ] job status works.
+[ ] job result matches synchronous execution.
+[ ] cancellation works while cancellable.
+[ ] completed jobs correctly reject cancellation.
+[ ] resource guard works.
+[ ] retention works.
+
+BACKUP
+------
+[ ] create.
+[ ] list.
+[ ] validate.
+[ ] recover-test.
+[ ] live_data_changed=false.
+[ ] restore tested safely.
+[ ] retention.
+[ ] external copy when configured.
+[ ] encryption key managed separately.
+
+SERVER DEPLOYMENT
+-----------------
+The application will run on a server and connect to real production
+databases later.
+
+Application-state backup:
+  users
+  connections
+  saved reports
+  datasets
+  ACL state
+
+Production database backup:
+  handled separately by the actual MySQL/MongoDB production architecture.
+
+For horizontal scaling:
+  replace/adapt process-local jobs, locks and session/revocation state
+  with shared infrastructure.
+
+FINAL CHANGE-MANAGEMENT RULE
+----------------------------
+This document is a runbook, not permission to delete source files.
+
+Never remove a file solely because it is named:
+  Step / Fixed / Updated / Backup / Final / Complete / Old
+
+Only remove a file after:
+  1. references are checked;
+  2. functionality is compared;
+  3. unique behavior is proven redundant;
+  4. backend compiles;
+  5. frontend builds;
+  6. regression tests pass;
+  7. rollback is available.
+
+The production objective is:
+  feature preservation first,
+  safe optimization second,
+  cleanup last.
+
+
+================================================================
+APPENDIX A — IMPLEMENTATION HISTORY / SOURCE-PRESERVATION RULE
+================================================================
+
+The original development process used separate STEP README files because each
+phase was implemented and tested independently. This master document is the
+operational consolidation of that work.
+
+The following implementation boundaries are intentional and must be retained:
+
+STEP 2A
+-------
+security.py establishes Fernet encryption/decryption and deliberately does not
+modify the connection registry. Existing plaintext credentials remain untouched
+until the controlled Step 2B migration.
+
+STEP 2B
+-------
+connection_registry.py integrates encryption and safely migrates existing saved
+credentials. list/create/update responses must not expose passwords, while
+runtime lookup may decrypt the credential in memory.
+
+STEP 3A
+-------
+auth.py establishes password hashing and signed token support without changing
+existing API routes or frontend behavior.
+
+STEP 3B
+-------
+user_registry.py introduces the local users registry and supports admin and
+report_user roles. Stored passwords are hashes, never plaintext.
+
+STEP 3C
+-------
+auth_api.py introduces login, current-user and logout endpoints. main.py is
+updated only to mount the authentication router.
+
+STEP 3D
+-------
+Authentication is then applied to existing protected APIs. This is separate
+from the fine-grained authorization introduced in Step 4.
+
+STEP 4
+------
+permissions.py provides fine-grained authorization. Frontend visibility is
+not considered sufficient security; the backend must enforce the permission.
+
+STEP 5A
+-------
+connection_access.py adds connection-level access control without changing the
+underlying database credentials model.
+
+STEP 6 / 6B
+-----------
+MAX_QUERY_ROWS=0 removes an artificial application row ceiling, but request
+size, timeout, JOIN count, memory, export size and concurrency protections
+remain independent.
+
+STEP 7
+------
+Logging is deliberately separated into application and audit logs. Secrets,
+tokens and request bodies must not be logged.
+
+STEP 8 / 8B / 8C
+----------------
+Application-state backups are separate from database-content backups.
+Recovery-test is deliberately non-destructive. External backup storage is
+provider-neutral because the eventual deployment is server-based.
+
+STEP 9
+------
+Large-data behavior is designed around pushdown, projection, streaming,
+server-side processing and bounded browser rendering.
+
+STEP 9B
+-------
+query_pushdown.py and streaming.py establish a structured planner and streaming
+foundation without replacing connector-specific execution.
+
+STEP 9C
+-------
+MySQL receives actual connector-specific filter pushdown, projection and
+streaming. Cross-source JOIN semantics remain under the existing JOIN engine.
+
+STEP 9D
+-------
+MongoDB receives actual aggregation pipeline pushdown:
+$match, $project, safe $sort/$limit, aggregation cursor batching and
+allowDiskUse. Complex OR/calculated expressions are not blindly pushed down.
+
+STEP 9D FIX
+-----------
+The MongoDB execution path must use the existing create_mongo_connection()
+helper rather than introducing an undefined create_mongodb_client() path.
+
+STEP 9E
+-------
+Same-source JOINs are candidates for source-local optimization; cross-source
+JOINs continue through the existing semantic JOIN engine.
+
+STEP 9E / STEP 10 FIXES
+-----------------------
+The optimized JOIN path must preserve requested report columns and aliases.
+Background jobs must pass the complete report-query payload to the existing
+executor, including datasets, joins, columns, filters, sorts, group_by,
+aggregations, calculated_columns and limit.
+
+MONGODB FIELD QUALIFICATION FIX
+-------------------------------
+MongoDB returned fields must be qualified with the dataset ID so that the
+existing JOIN/report layer can distinguish fields from different datasets.
+The previously observed undefined local rows variable must not be reintroduced.
+
+STEP 10
+-------
+Background execution adds queueing, status, cancellation and resource
+management. A completed job is not cancellable; cancellation applies only
+while the job is in a cancellable state.
+
+STEP 11
+-------
+Production security and frontend integration add environment-configurable
+frontend API addressing, permission helpers, production security checks and
+server-oriented configuration while preserving the existing reporting,
+JOIN, pushdown, backup and execution behavior.
+
+
+================================================================
+APPENDIX B — VERIFIED TEST PATTERNS USED DURING DEVELOPMENT
+================================================================
+
+PYTHON SYNTAX
+-------------
+python -m py_compile config.py permissions.py logging_config.py backup_manager.py main.py
+
+BACKUP
+------
+python backup_manager.py create
+python backup_manager.py list
+python backup_manager.py retention
+python backup_manager.py validate ".\backups\<backup>.tar.gz"
+python backup_manager.py recover-test ".\backups\<backup>.tar.gz"
+python backup_manager.py external-copy ".\backups\<backup>.tar.gz"
+
+Expected recovery-test characteristic:
+    "live_data_changed": false
+
+CAPACITY
+--------
+GET /system/capacity
+
+Expected core values:
+    report_row_limit = 0
+    report_row_limit_mode = dynamic
+    query_pushdown_enabled = true
+
+MYSQL PUSHdown
+--------------
+A successful report response should expose diagnostics such as:
+    mysql_filters_pushed
+    mysql_projection_enabled
+    mysql_streaming_enabled
+
+Example successful behavior observed during development:
+    mysql_filters_pushed = 1
+    mysql_projection_enabled = true
+    mysql_streaming_enabled = true
+
+MONGODB PUSHdown
+----------------
+A successful MongoDB pushdown response should expose:
+    mongodb_filters_pushed
+    mongodb_projection_enabled
+    mongodb_pipeline_enabled
+    mongodb_batch_streaming_enabled
+
+SAME-SOURCE MONGODB JOIN
+------------------------
+The verified sample test uses two datasets pointing at the same
+Meter_Electrical_Data collection and joins on:
+
+    Meter_Serial_Number
+
+Requested fields include:
+    mongo_a.Meter_Serial_Number
+    mongo_a.R_Voltage
+    mongo_b.R_Voltage
+
+The verified sample contains 22 matching documents and should return actual
+rows such as:
+
+    HP190000001 | 6176.7 | 6176.7
+    HP190000002 | 6183   | 6183
+    HP190000003 | 6176.2 | 6176.2
+
+The important regression condition is that the result must contain actual
+column names and values rather than a list of empty {} rows.
+
+CROSS-SOURCE JOIN
+-----------------
+MySQL + MongoDB continues through the existing cross-source JOIN engine.
+
+Expected diagnostic concept:
+    join_strategy = existing_join_engine
+    cross_source_join_supported = true
+
+BACKGROUND JOB
+--------------
+POST /execution/jobs should return:
+    success = true
+    job_id = <id>
+    status = queued
+
+GET /execution/jobs/{job_id} should eventually show:
+    completed
+or
+    failed
+or
+    cancelled
+
+A completed job must not be cancellable. The response:
+    "Job cannot be cancelled in its current state."
+is correct for an already completed job.
+
+If a job fails with:
+    _execute_report_query_unbounded() missing ... joins, columns, filters,
+    sorts, group_by, aggregations, calculated_columns, limit
+
+then the background payload normalization is incomplete and Step 9E/Step 10
+job-payload integration must be checked.
+
+MANAGE USERS
+------------
+Admin must be able to access Manage Users through the frontend and backend
+permissions must independently enforce authorization.
+
+A missing frontend Manage Users entry is an integration issue, not a reason
+to remove the backend user-management functionality.
+
+
+================================================================
+APPENDIX C — PRODUCTION SERVER PRINCIPLES
+================================================================
+
+The local Windows environment is a development/test environment.
+
+The future production deployment is expected to run on a server.
+
+Therefore:
+
+1. Paths must not depend on a developer's Windows username.
+2. Configuration must come from environment/server configuration.
+3. Database credentials must not be hard-coded.
+4. Encryption keys must be persistent across restarts/deployments.
+5. Backup storage should support an external/off-machine target.
+6. Production database backup is separate from application-state backup.
+7. Browser rendering must remain bounded even when reports contain millions
+   of rows.
+8. Server-side filtering/aggregation/pushdown should be preferred.
+9. Streaming should prevent unnecessary full-result buffering.
+10. Resource controls must remain enabled even though MAX_QUERY_ROWS=0.
+11. Horizontal scaling requires shared infrastructure for state that is
+    currently process-local.
+12. Reverse proxy/TLS/security headers/CORS must be configured according to
+    the real deployment topology.
+
+MULTI-INSTANCE WARNING
+----------------------
+The current background job manager is process-local. It is suitable for the
+current controlled deployment/testing architecture but must not be assumed to
+be a distributed job queue.
+
+Before running multiple backend workers/instances, introduce a shared job
+queue/worker architecture such as Redis + Celery/RQ or an equivalent design,
+and review session/token-revocation state for shared access.
+
+DATABASE WARNING
+----------------
+The sample MySQL and MongoDB databases used during development are not
+application backup contents.
+
+A production backup plan must separately cover:
+    MySQL
+    MongoDB
+    any future ClickHouse/other production sources
+
+The application-state backup protects application configuration/state, not
+the millions of rows stored in external database systems.
+
+
+================================================================
+APPENDIX D — SAFE CLEANUP POLICY
+================================================================
+
+"Cleanup" means:
+
+    • remove dead imports after verification
+    • remove unreachable code after verification
+    • normalize formatting
+    • remove duplicated CSS rules after visual/build verification
+    • consolidate genuinely duplicated helpers
+    • standardize environment/config handling
+    • improve naming where references are updated consistently
+    • remove generated development artifacts from deployment packages
+
+"Cleanup" does NOT mean:
+
+    • delete Step files
+    • delete Fixed files
+    • delete Updated files
+    • delete Backup files
+    • delete Final files
+    • delete Complete files
+    • delete alternative JSX/Python implementations
+    • replace a component merely because another version has a newer filename
+
+Before removing any source file:
+
+    1. Search every import/reference.
+    2. Compare its functionality with the proposed replacement.
+    3. Identify unique functions/routes/UI behavior.
+    4. Merge unique functionality if appropriate.
+    5. Compile backend.
+    6. Build frontend.
+    7. Run regression tests.
+    8. Create rollback backup.
+    9. Only then remove the file if it is proven redundant.
+
+The filename is never sufficient evidence of redundancy.
+
+
+================================================================
+APPENDIX E — MASTER GO-LIVE SEQUENCE
+================================================================
+
+PHASE A — SOURCE
+----------------
+[ ] Source inventory completed.
+[ ] No functionality removed by filename.
+[ ] Backend modules identified.
+[ ] Frontend components identified.
+[ ] Historical implementations compared before consolidation.
+
+PHASE B — BACKEND
+-----------------
+[ ] Python compile passes.
+[ ] Environment configuration passes.
+[ ] Encryption/decryption passes.
+[ ] User registry passes.
+[ ] Authentication passes.
+[ ] Authorization passes.
+[ ] Connection ACL passes.
+[ ] Capacity endpoint passes.
+[ ] Query protection passes.
+[ ] Audit logging passes.
+[ ] Backup create/list/validate/recovery passes.
+[ ] Pushdown diagnostics pass.
+[ ] MongoDB pushdown passes.
+[ ] JOIN regression passes.
+[ ] Background job regression passes.
+[ ] Production security endpoint passes.
+
+PHASE C — FRONTEND
+------------------
+[ ] npm install works.
+[ ] npm run build works.
+[ ] Login works.
+[ ] Permission-aware UI works.
+[ ] Manage Users works.
+[ ] Data Sources works.
+[ ] Data Preview works.
+[ ] Join Designer works.
+[ ] Report Builder works.
+[ ] Reports/export/visualization work.
+
+PHASE D — SERVER
+----------------
+[ ] Production .env/secret manager configured.
+[ ] TLS/reverse proxy configured.
+[ ] Production CORS configured.
+[ ] Persistent application storage configured.
+[ ] External backup destination configured.
+[ ] Database backup configured separately.
+[ ] Monitoring/log rotation configured.
+[ ] Resource limits tuned against actual hardware.
+[ ] Multi-worker architecture reviewed.
+[ ] Restore procedure tested.
+
+PHASE E — GO LIVE
+-----------------
+[ ] Full backup taken.
+[ ] Encryption key escrow confirmed.
+[ ] Admin account verified.
+[ ] Production database connections tested.
+[ ] Report query tested with representative data.
+[ ] Large-data report tested.
+[ ] JOIN tested.
+[ ] Export tested.
+[ ] Background job tested.
+[ ] Audit log tested.
+[ ] Recovery procedure documented.
+
+END STATE
+---------
+The target production system is a server-side reporting application that can
+connect to multiple database systems, push supported work toward those source
+systems, stream large result sets, perform controlled cross-source JOINs,
+protect access by user/connection permissions, execute reports synchronously
+or through bounded background jobs, and maintain recoverable application
+configuration.
+
+It is NOT assumed that unlimited rows means unlimited resource usage, and it
+is NOT assumed that every cross-source JOIN can be pushed into a source DB.

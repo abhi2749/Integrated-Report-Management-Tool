@@ -1,0 +1,38 @@
+services:
+  stress-mysql:
+    image: mysql:8.0
+    container_name: reportingtool-stress-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: stress_root_password
+      MYSQL_DATABASE: stressdb
+      MYSQL_USER: stressuser
+      MYSQL_PASSWORD: stress_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - stress_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -ustressuser -pstress_password --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  stress-mongo:
+    image: mongo:8
+    container_name: reportingtool-stress-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: stressroot
+      MONGO_INITDB_ROOT_PASSWORD: stress_root_password
+    ports:
+      - "27018:27017"
+    volumes:
+      - stress_mongo_data:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --username stressroot --password stress_root_password --authenticationDatabase admin --eval 'db.adminCommand({ping:1}).ok' | grep 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  stress_mysql_data:
+  stress_mongo_data:

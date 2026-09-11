@@ -1,0 +1,84 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    environment:
+      APP_ENV: production
+      APP_HOST: 0.0.0.0
+      APP_NAME: "Integrated Report Management Tool"
+      APP_PORT: "8000"
+      # The browser uses the frontend reverse proxy, so the default deployment
+      # is same-origin and does not require a fixed host URL. Direct clients can
+      # still provide CORS_ORIGINS explicitly when needed.
+      CORS_ORIGINS: "${CORS_ORIGINS:-}"
+      ENCRYPTION_KEY: "${ENCRYPTION_KEY:-}"
+      SECRET_KEY: "${SECRET_KEY:-}"
+      SECRET_KEY_PREVIOUS: "${SECRET_KEY_PREVIOUS:-}"
+      ENCRYPTION_KEY_PREVIOUS: "${ENCRYPTION_KEY_PREVIOUS:-}"
+      # Keys are seeded automatically and persisted in /app/data/keyring.json.
+      # The keyring is authoritative after initialization, including after rotation.
+      KEYRING_ALLOW_ENV_OVERRIDE: "${KEYRING_ALLOW_ENV_OVERRIDE:-false}"
+    volumes:
+      - reporting_data:/app/data
+      - reporting_backups:/app/backups
+    # Let Docker choose an unused host port while keeping the service private.
+    ports:
+      - target: 8000
+        published: "0"
+        host_ip: 127.0.0.1
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready')"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  frontend:
+    build:
+      context: ./frontend-ui
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ""
+    restart: unless-stopped
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    depends_on:
+      backend:
+        condition: service_healthy
+    # Let Docker choose an unused loopback host port for the UI.
+    ports:
+      - target: 80
+        published: "0"
+        host_ip: 127.0.0.1
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - -q
+        - -O
+        - /dev/null
+        - http://127.0.0.1/
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+volumes:
+  reporting_data:
+  reporting_backups:

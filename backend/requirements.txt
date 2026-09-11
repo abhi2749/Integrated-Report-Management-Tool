@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+mysql-connector-python
+pymongo
+pymysql
+clickhouse-connect
+python-dotenv
+cryptography
+openpyxl>=3.1,<4
+reportlab>=4,<5
+python-multipart>=0.0.20,<1

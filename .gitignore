@@ -1,0 +1,42 @@
+﻿# Secrets / environment
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Runtime application data
+backend/data/
+**/*.manual_backup
+
+# Backup/recovery copies
+**/*.step10_reid_backup
+.step10_reid_backup/
+.step11_backup/
+
+# Python
+venv/
+.venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+**/.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+**/node_modules/
+dist/
+build/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db

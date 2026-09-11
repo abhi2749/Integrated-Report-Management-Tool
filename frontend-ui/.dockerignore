@@ -1,0 +1,24 @@
+# Source-control and local tooling
+.git/
+.gitignore
+
+# Node/Vite runtime and build artifacts
+node_modules/
+dist/
+.npm/
+.pnpm-store/
+.yarn/
+.yarn-cache/
+coverage/
+
+# Tests/development artifacts not needed by the production runtime image
+.vscode/
+.idea/
+.env
+.env.*
+*.log
+
+# Editor/OS artifacts
+*.swp
+.DS_Store
+Thumbs.db

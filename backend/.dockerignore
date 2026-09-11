@@ -1,0 +1,33 @@
+# Source-control and local tooling
+.git/
+.gitignore
+
+# Python runtime/development artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+venv/
+.venv/
+env/
+ENV/
+
+# Tests and local development files are not required in the production image
+tests/
+.env
+.env.*
+
+# Local runtime state; production uses Docker volumes
+logs/
+data/
+backups/
+
+# Editor/OS artifacts
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db

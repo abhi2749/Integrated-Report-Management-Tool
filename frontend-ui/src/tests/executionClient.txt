@@ -1,0 +1,8 @@
+Phase 2A8 static verification checklist:
+- JoinDesigner imports executionClient.
+- JoinDesigner no longer calls /report/query for its report execution flow.
+- executionClient submits POST /execution/jobs.
+- executionClient polls GET /execution/jobs/{job_id}.
+- completed job results preserve the existing report result shape.
+- failed/cancelled jobs surface the backend error.
+- polling has a bounded timeout.

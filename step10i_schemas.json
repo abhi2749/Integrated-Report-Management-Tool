@@ -1,0 +1,1638 @@
+﻿{
+    "Body_import_data_endpoint_data_import_post":  {
+                                                       "properties":  {
+                                                                          "file":  {
+                                                                                       "type":  "string",
+                                                                                       "contentMediaType":  "application/octet-stream",
+                                                                                       "title":  "File"
+                                                                                   }
+                                                                      },
+                                                       "type":  "object",
+                                                       "required":  [
+                                                                        "file"
+                                                                    ],
+                                                       "title":  "Body_import_data_endpoint_data_import_post"
+                                                   },
+    "CalculatedColumn":  {
+                             "properties":  {
+                                                "alias":  {
+                                                              "type":  "string",
+                                                              "title":  "Alias"
+                                                          },
+                                                "left_field":  {
+                                                                   "type":  "string",
+                                                                   "title":  "Left Field"
+                                                               },
+                                                "operation":  {
+                                                                  "type":  "string",
+                                                                  "title":  "Operation"
+                                                              },
+                                                "right_field":  {
+                                                                    "anyOf":  [
+                                                                                  {
+                                                                                      "type":  "string"
+                                                                                  },
+                                                                                  {
+                                                                                      "type":  "null"
+                                                                                  }
+                                                                              ],
+                                                                    "title":  "Right Field"
+                                                                },
+                                                "right_value":  {
+                                                                    "title":  "Right Value"
+                                                                }
+                                            },
+                             "type":  "object",
+                             "required":  [
+                                              "alias",
+                                              "left_field",
+                                              "operation"
+                                          ],
+                             "title":  "CalculatedColumn"
+                         },
+    "ClickHouseColumnRequest":  {
+                                    "properties":  {
+                                                       "host":  {
+                                                                    "type":  "string",
+                                                                    "title":  "Host"
+                                                                },
+                                                       "port":  {
+                                                                    "type":  "integer",
+                                                                    "title":  "Port",
+                                                                    "default":  8123
+                                                                },
+                                                       "username":  {
+                                                                        "anyOf":  [
+                                                                                      {
+                                                                                          "type":  "string"
+                                                                                      },
+                                                                                      {
+                                                                                          "type":  "null"
+                                                                                      }
+                                                                                  ],
+                                                                        "title":  "Username"
+                                                                    },
+                                                       "password":  {
+                                                                        "anyOf":  [
+                                                                                      {
+                                                                                          "type":  "string"
+                                                                                      },
+                                                                                      {
+                                                                                          "type":  "null"
+                                                                                      }
+                                                                                  ],
+                                                                        "title":  "Password"
+                                                                    },
+                                                       "database":  {
+                                                                        "type":  "string",
+                                                                        "title":  "Database"
+                                                                    },
+                                                       "table":  {
+                                                                     "type":  "string",
+                                                                     "title":  "Table"
+                                                                 }
+                                                   },
+                                    "type":  "object",
+                                    "required":  [
+                                                     "host",
+                                                     "database",
+                                                     "table"
+                                                 ],
+                                    "title":  "ClickHouseColumnRequest"
+                                },
+    "ClickHouseConnection":  {
+                                 "properties":  {
+                                                    "host":  {
+                                                                 "type":  "string",
+                                                                 "title":  "Host"
+                                                             },
+                                                    "port":  {
+                                                                 "type":  "integer",
+                                                                 "title":  "Port",
+                                                                 "default":  8123
+                                                             },
+                                                    "username":  {
+                                                                     "anyOf":  [
+                                                                                   {
+                                                                                       "type":  "string"
+                                                                                   },
+                                                                                   {
+                                                                                       "type":  "null"
+                                                                                   }
+                                                                               ],
+                                                                     "title":  "Username"
+                                                                 },
+                                                    "password":  {
+                                                                     "anyOf":  [
+                                                                                   {
+                                                                                       "type":  "string"
+                                                                                   },
+                                                                                   {
+                                                                                       "type":  "null"
+                                                                                   }
+                                                                               ],
+                                                                     "title":  "Password"
+                                                                 }
+                                                },
+                                 "type":  "object",
+                                 "required":  [
+                                                  "host"
+                                              ],
+                                 "title":  "ClickHouseConnection"
+                             },
+    "ClickHouseTableRequest":  {
+                                   "properties":  {
+                                                      "host":  {
+                                                                   "type":  "string",
+                                                                   "title":  "Host"
+                                                               },
+                                                      "port":  {
+                                                                   "type":  "integer",
+                                                                   "title":  "Port",
+                                                                   "default":  8123
+                                                               },
+                                                      "username":  {
+                                                                       "anyOf":  [
+                                                                                     {
+                                                                                         "type":  "string"
+                                                                                     },
+                                                                                     {
+                                                                                         "type":  "null"
+                                                                                     }
+                                                                                 ],
+                                                                       "title":  "Username"
+                                                                   },
+                                                      "password":  {
+                                                                       "anyOf":  [
+                                                                                     {
+                                                                                         "type":  "string"
+                                                                                     },
+                                                                                     {
+                                                                                         "type":  "null"
+                                                                                     }
+                                                                                 ],
+                                                                       "title":  "Password"
+                                                                   },
+                                                      "database":  {
+                                                                       "type":  "string",
+                                                                       "title":  "Database"
+                                                                   }
+                                                  },
+                                   "type":  "object",
+                                   "required":  [
+                                                    "host",
+                                                    "database"
+                                                ],
+                                   "title":  "ClickHouseTableRequest"
+                               },
+    "ConnectionAccessRequest":  {
+                                    "properties":  {
+                                                       "mode":  {
+                                                                    "type":  "string",
+                                                                    "title":  "Mode",
+                                                                    "default":  "all"
+                                                                },
+                                                       "user_ids":  {
+                                                                        "items":  {
+                                                                                      "type":  "string"
+                                                                                  },
+                                                                        "type":  "array",
+                                                                        "title":  "User Ids"
+                                                                    }
+                                                   },
+                                    "type":  "object",
+                                    "title":  "ConnectionAccessRequest"
+                                },
+    "DashboardExportRequest":  {
+                                   "properties":  {
+                                                      "name":  {
+                                                                   "type":  "string",
+                                                                   "maxLength":  200,
+                                                                   "minLength":  1,
+                                                                   "title":  "Name",
+                                                                   "default":  "Dashboard"
+                                                               },
+                                                      "definition":  {
+                                                                         "additionalProperties":  true,
+                                                                         "type":  "object",
+                                                                         "title":  "Definition"
+                                                                     },
+                                                      "result":  {
+                                                                     "additionalProperties":  true,
+                                                                     "type":  "object",
+                                                                     "title":  "Result"
+                                                                 }
+                                                  },
+                                   "type":  "object",
+                                   "title":  "DashboardExportRequest"
+                               },
+    "DashboardShareRequest":  {
+                                  "properties":  {
+                                                     "username":  {
+                                                                      "type":  "string",
+                                                                      "maxLength":  100,
+                                                                      "minLength":  1,
+                                                                      "title":  "Username"
+                                                                  }
+                                                 },
+                                  "type":  "object",
+                                  "required":  [
+                                                   "username"
+                                               ],
+                                  "title":  "DashboardShareRequest"
+                              },
+    "DatasetDefinition":  {
+                              "properties":  {
+                                                 "id":  {
+                                                            "type":  "string",
+                                                            "title":  "Id"
+                                                        },
+                                                 "connection_id":  {
+                                                                       "anyOf":  [
+                                                                                     {
+                                                                                         "type":  "string"
+                                                                                     },
+                                                                                     {
+                                                                                         "type":  "null"
+                                                                                     }
+                                                                                 ],
+                                                                       "title":  "Connection Id"
+                                                                   },
+                                                 "source_type":  {
+                                                                     "anyOf":  [
+                                                                                   {
+                                                                                       "type":  "string"
+                                                                                   },
+                                                                                   {
+                                                                                       "type":  "null"
+                                                                                   }
+                                                                               ],
+                                                                     "title":  "Source Type"
+                                                                 },
+                                                 "host":  {
+                                                              "anyOf":  [
+                                                                            {
+                                                                                "type":  "string"
+                                                                            },
+                                                                            {
+                                                                                "type":  "null"
+                                                                            }
+                                                                        ],
+                                                              "title":  "Host"
+                                                          },
+                                                 "port":  {
+                                                              "anyOf":  [
+                                                                            {
+                                                                                "type":  "integer"
+                                                                            },
+                                                                            {
+                                                                                "type":  "null"
+                                                                            }
+                                                                        ],
+                                                              "title":  "Port"
+                                                          },
+                                                 "username":  {
+                                                                  "anyOf":  [
+                                                                                {
+                                                                                    "type":  "string"
+                                                                                },
+                                                                                {
+                                                                                    "type":  "null"
+                                                                                }
+                                                                            ],
+                                                                  "title":  "Username"
+                                                              },
+                                                 "password":  {
+                                                                  "anyOf":  [
+                                                                                {
+                                                                                    "type":  "string"
+                                                                                },
+                                                                                {
+                                                                                    "type":  "null"
+                                                                                }
+                                                                            ],
+                                                                  "title":  "Password"
+                                                              },
+                                                 "database":  {
+                                                                  "type":  "string",
+                                                                  "title":  "Database"
+                                                              },
+                                                 "table":  {
+                                                               "anyOf":  [
+                                                                             {
+                                                                                 "type":  "string"
+                                                                             },
+                                                                             {
+                                                                                 "type":  "null"
+                                                                             }
+                                                                         ],
+                                                               "title":  "Table"
+                                                           },
+                                                 "object_name":  {
+                                                                     "anyOf":  [
+                                                                                   {
+                                                                                       "type":  "string"
+                                                                                   },
+                                                                                   {
+                                                                                       "type":  "null"
+                                                                                   }
+                                                                               ],
+                                                                     "title":  "Object Name"
+                                                                 }
+                                             },
+                              "type":  "object",
+                              "required":  [
+                                               "id",
+                                               "database"
+                                           ],
+                              "title":  "DatasetDefinition"
+                          },
+    "DatasetPreviewRequest":  {
+                                  "properties":  {
+                                                     "source_type":  {
+                                                                         "type":  "string",
+                                                                         "title":  "Source Type"
+                                                                     },
+                                                     "host":  {
+                                                                  "type":  "string",
+                                                                  "title":  "Host"
+                                                              },
+                                                     "port":  {
+                                                                  "type":  "integer",
+                                                                  "title":  "Port"
+                                                              },
+                                                     "username":  {
+                                                                      "anyOf":  [
+                                                                                    {
+                                                                                        "type":  "string"
+                                                                                    },
+                                                                                    {
+                                                                                        "type":  "null"
+                                                                                    }
+                                                                                ],
+                                                                      "title":  "Username"
+                                                                  },
+                                                     "password":  {
+                                                                      "anyOf":  [
+                                                                                    {
+                                                                                        "type":  "string"
+                                                                                    },
+                                                                                    {
+                                                                                        "type":  "null"
+                                                                                    }
+                                                                                ],
+                                                                      "title":  "Password"
+                                                                  },
+                                                     "database":  {
+                                                                      "type":  "string",
+                                                                      "title":  "Database"
+                                                                  },
+                                                     "table":  {
+                                                                   "type":  "string",
+                                                                   "title":  "Table"
+                                                               },
+                                                     "sample_limit":  {
+                                                                          "type":  "integer",
+                                                                          "title":  "Sample Limit",
+                                                                          "default":  25
+                                                                      }
+                                                 },
+                                  "type":  "object",
+                                  "required":  [
+                                                   "source_type",
+                                                   "host",
+                                                   "port",
+                                                   "database",
+                                                   "table"
+                                               ],
+                                  "title":  "DatasetPreviewRequest"
+                              },
+    "ExecutionTransformRequest":  {
+                                      "properties":  {
+                                                         "filters":  {
+                                                                         "anyOf":  [
+                                                                                       {
+                                                                                           "items":  {
+                                                                                                         "$ref":  "#/components/schemas/ReportFilter"
+                                                                                                     },
+                                                                                           "type":  "array"
+                                                                                       },
+                                                                                       {
+                                                                                           "type":  "null"
+                                                                                       }
+                                                                                   ],
+                                                                         "title":  "Filters"
+                                                                     },
+                                                         "sorts":  {
+                                                                       "anyOf":  [
+                                                                                     {
+                                                                                         "items":  {
+                                                                                                       "$ref":  "#/components/schemas/ReportSort"
+                                                                                                   },
+                                                                                         "type":  "array"
+                                                                                     },
+                                                                                     {
+                                                                                         "type":  "null"
+                                                                                     }
+                                                                                 ],
+                                                                       "title":  "Sorts"
+                                                                   },
+                                                         "group_by":  {
+                                                                          "anyOf":  [
+                                                                                        {
+                                                                                            "items":  {
+                                                                                                          "type":  "string"
+                                                                                                      },
+                                                                                            "type":  "array"
+                                                                                        },
+                                                                                        {
+                                                                                            "type":  "null"
+                                                                                        }
+                                                                                    ],
+                                                                          "title":  "Group By"
+                                                                      },
+                                                         "aggregations":  {
+                                                                              "anyOf":  [
+                                                                                            {
+                                                                                                "items":  {
+                                                                                                              "$ref":  "#/components/schemas/ReportAggregation"
+                                                                                                          },
+                                                                                                "type":  "array"
+                                                                                            },
+                                                                                            {
+                                                                                                "type":  "null"
+                                                                                            }
+                                                                                        ],
+                                                                              "title":  "Aggregations"
+                                                                          },
+                                                         "limit":  {
+                                                                       "anyOf":  [
+                                                                                     {
+                                                                                         "type":  "integer"
+                                                                                     },
+                                                                                     {
+                                                                                         "type":  "null"
+                                                                                     }
+                                                                                 ],
+                                                                       "title":  "Limit"
+                                                                   }
+                                                     },
+                                      "type":  "object",
+                                      "title":  "ExecutionTransformRequest",
+                                      "description":  "Operations that can be applied to an existing canonical execution.\n\nThe source datasets, JOIN graph and selected columns stay attached to the\noriginal job. Only relational operations are replaced, so the browser does\nnot need to resend connection metadata for every filter/sort interaction."
+                                  },
+    "GenericDataSourceColumnRequest":  {
+                                           "properties":  {
+                                                              "source_type":  {
+                                                                                  "type":  "string",
+                                                                                  "title":  "Source Type"
+                                                                              },
+                                                              "host":  {
+                                                                           "type":  "string",
+                                                                           "title":  "Host"
+                                                                       },
+                                                              "port":  {
+                                                                           "type":  "integer",
+                                                                           "title":  "Port"
+                                                                       },
+                                                              "username":  {
+                                                                               "anyOf":  [
+                                                                                             {
+                                                                                                 "type":  "string"
+                                                                                             },
+                                                                                             {
+                                                                                                 "type":  "null"
+                                                                                             }
+                                                                                         ],
+                                                                               "title":  "Username"
+                                                                           },
+                                                              "password":  {
+                                                                               "anyOf":  [
+                                                                                             {
+                                                                                                 "type":  "string"
+                                                                                             },
+                                                                                             {
+                                                                                                 "type":  "null"
+                                                                                             }
+                                                                                         ],
+                                                                               "title":  "Password"
+                                                                           },
+                                                              "database":  {
+                                                                               "type":  "string",
+                                                                               "title":  "Database"
+                                                                           },
+                                                              "table":  {
+                                                                            "type":  "string",
+                                                                            "title":  "Table"
+                                                                        }
+                                                          },
+                                           "type":  "object",
+                                           "required":  [
+                                                            "source_type",
+                                                            "host",
+                                                            "port",
+                                                            "database",
+                                                            "table"
+                                                        ],
+                                           "title":  "GenericDataSourceColumnRequest"
+                                       },
+    "GenericDataSourcePreviewRequest":  {
+                                            "properties":  {
+                                                               "source_type":  {
+                                                                                   "type":  "string",
+                                                                                   "title":  "Source Type"
+                                                                               },
+                                                               "host":  {
+                                                                            "type":  "string",
+                                                                            "title":  "Host"
+                                                                        },
+                                                               "port":  {
+                                                                            "type":  "integer",
+                                                                            "title":  "Port"
+                                                                        },
+                                                               "username":  {
+                                                                                "anyOf":  [
+                                                                                              {
+                                                                                                  "type":  "string"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "null"
+                                                                                              }
+                                                                                          ],
+                                                                                "title":  "Username"
+                                                                            },
+                                                               "password":  {
+                                                                                "anyOf":  [
+                                                                                              {
+                                                                                                  "type":  "string"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "null"
+                                                                                              }
+                                                                                          ],
+                                                                                "title":  "Password"
+                                                                            },
+                                                               "database":  {
+                                                                                "type":  "string",
+                                                                                "title":  "Database"
+                                                                            },
+                                                               "table":  {
+                                                                             "type":  "string",
+                                                                             "title":  "Table"
+                                                                         },
+                                                               "sample_limit":  {
+                                                                                    "type":  "integer",
+                                                                                    "title":  "Sample Limit",
+                                                                                    "default":  25
+                                                                                }
+                                                           },
+                                            "type":  "object",
+                                            "required":  [
+                                                             "source_type",
+                                                             "host",
+                                                             "port",
+                                                             "database",
+                                                             "table"
+                                                         ],
+                                            "title":  "GenericDataSourcePreviewRequest"
+                                        },
+    "GenericDataSourceRequest":  {
+                                     "properties":  {
+                                                        "source_type":  {
+                                                                            "type":  "string",
+                                                                            "title":  "Source Type"
+                                                                        },
+                                                        "host":  {
+                                                                     "type":  "string",
+                                                                     "title":  "Host"
+                                                                 },
+                                                        "port":  {
+                                                                     "type":  "integer",
+                                                                     "title":  "Port"
+                                                                 },
+                                                        "username":  {
+                                                                         "anyOf":  [
+                                                                                       {
+                                                                                           "type":  "string"
+                                                                                       },
+                                                                                       {
+                                                                                           "type":  "null"
+                                                                                       }
+                                                                                   ],
+                                                                         "title":  "Username"
+                                                                     },
+                                                        "password":  {
+                                                                         "anyOf":  [
+                                                                                       {
+                                                                                           "type":  "string"
+                                                                                       },
+                                                                                       {
+                                                                                           "type":  "null"
+                                                                                       }
+                                                                                   ],
+                                                                         "title":  "Password"
+                                                                     }
+                                                    },
+                                     "type":  "object",
+                                     "required":  [
+                                                      "source_type",
+                                                      "host",
+                                                      "port"
+                                                  ],
+                                     "title":  "GenericDataSourceRequest"
+                                 },
+    "GenericDataSourceTableRequest":  {
+                                          "properties":  {
+                                                             "source_type":  {
+                                                                                 "type":  "string",
+                                                                                 "title":  "Source Type"
+                                                                             },
+                                                             "host":  {
+                                                                          "type":  "string",
+                                                                          "title":  "Host"
+                                                                      },
+                                                             "port":  {
+                                                                          "type":  "integer",
+                                                                          "title":  "Port"
+                                                                      },
+                                                             "username":  {
+                                                                              "anyOf":  [
+                                                                                            {
+                                                                                                "type":  "string"
+                                                                                            },
+                                                                                            {
+                                                                                                "type":  "null"
+                                                                                            }
+                                                                                        ],
+                                                                              "title":  "Username"
+                                                                          },
+                                                             "password":  {
+                                                                              "anyOf":  [
+                                                                                            {
+                                                                                                "type":  "string"
+                                                                                            },
+                                                                                            {
+                                                                                                "type":  "null"
+                                                                                            }
+                                                                                        ],
+                                                                              "title":  "Password"
+                                                                          },
+                                                             "database":  {
+                                                                              "type":  "string",
+                                                                              "title":  "Database"
+                                                                          }
+                                                         },
+                                          "type":  "object",
+                                          "required":  [
+                                                           "source_type",
+                                                           "host",
+                                                           "port",
+                                                           "database"
+                                                       ],
+                                          "title":  "GenericDataSourceTableRequest"
+                                      },
+    "HTTPValidationError":  {
+                                "properties":  {
+                                                   "detail":  {
+                                                                  "items":  {
+                                                                                "$ref":  "#/components/schemas/ValidationError"
+                                                                            },
+                                                                  "type":  "array",
+                                                                  "title":  "Detail"
+                                                              }
+                                               },
+                                "type":  "object",
+                                "title":  "HTTPValidationError"
+                            },
+    "ImportedDatasetUpdateRequest":  {
+                                         "properties":  {
+                                                            "name":  {
+                                                                         "type":  "string",
+                                                                         "maxLength":  200,
+                                                                         "minLength":  1,
+                                                                         "title":  "Name"
+                                                                     }
+                                                        },
+                                         "type":  "object",
+                                         "required":  [
+                                                          "name"
+                                                      ],
+                                         "title":  "ImportedDatasetUpdateRequest"
+                                     },
+    "JoinDefinition":  {
+                           "properties":  {
+                                              "left_dataset":  {
+                                                                   "type":  "string",
+                                                                   "title":  "Left Dataset"
+                                                               },
+                                              "right_dataset":  {
+                                                                    "type":  "string",
+                                                                    "title":  "Right Dataset"
+                                                                },
+                                              "left_column":  {
+                                                                  "type":  "string",
+                                                                  "title":  "Left Column"
+                                                              },
+                                              "right_column":  {
+                                                                   "type":  "string",
+                                                                   "title":  "Right Column"
+                                                               },
+                                              "join_type":  {
+                                                                "type":  "string",
+                                                                "title":  "Join Type",
+                                                                "default":  "INNER"
+                                                            }
+                                          },
+                           "type":  "object",
+                           "required":  [
+                                            "left_dataset",
+                                            "right_dataset",
+                                            "left_column",
+                                            "right_column"
+                                        ],
+                           "title":  "JoinDefinition"
+                       },
+    "LoginRequest":  {
+                         "properties":  {
+                                            "username":  {
+                                                             "type":  "string",
+                                                             "maxLength":  100,
+                                                             "minLength":  1,
+                                                             "title":  "Username"
+                                                         },
+                                            "password":  {
+                                                             "type":  "string",
+                                                             "maxLength":  1024,
+                                                             "minLength":  1,
+                                                             "title":  "Password"
+                                                         }
+                                        },
+                         "type":  "object",
+                         "required":  [
+                                          "username",
+                                          "password"
+                                      ],
+                         "title":  "LoginRequest"
+                     },
+    "LoginResponse":  {
+                          "properties":  {
+                                             "success":  {
+                                                             "type":  "boolean",
+                                                             "title":  "Success"
+                                                         },
+                                             "access_token":  {
+                                                                  "type":  "string",
+                                                                  "title":  "Access Token"
+                                                              },
+                                             "token_type":  {
+                                                                "type":  "string",
+                                                                "title":  "Token Type"
+                                                            },
+                                             "expires_in":  {
+                                                                "type":  "integer",
+                                                                "title":  "Expires In"
+                                                            },
+                                             "user":  {
+                                                          "additionalProperties":  true,
+                                                          "type":  "object",
+                                                          "title":  "User"
+                                                      }
+                                         },
+                          "type":  "object",
+                          "required":  [
+                                           "success",
+                                           "access_token",
+                                           "token_type",
+                                           "expires_in",
+                                           "user"
+                                       ],
+                          "title":  "LoginResponse"
+                      },
+    "MongoDBCollectionRequest":  {
+                                     "properties":  {
+                                                        "host":  {
+                                                                     "type":  "string",
+                                                                     "title":  "Host"
+                                                                 },
+                                                        "port":  {
+                                                                     "type":  "integer",
+                                                                     "title":  "Port"
+                                                                 },
+                                                        "username":  {
+                                                                         "anyOf":  [
+                                                                                       {
+                                                                                           "type":  "string"
+                                                                                       },
+                                                                                       {
+                                                                                           "type":  "null"
+                                                                                       }
+                                                                                   ],
+                                                                         "title":  "Username"
+                                                                     },
+                                                        "password":  {
+                                                                         "anyOf":  [
+                                                                                       {
+                                                                                           "type":  "string"
+                                                                                       },
+                                                                                       {
+                                                                                           "type":  "null"
+                                                                                       }
+                                                                                   ],
+                                                                         "title":  "Password"
+                                                                     },
+                                                        "database":  {
+                                                                         "type":  "string",
+                                                                         "title":  "Database"
+                                                                     }
+                                                    },
+                                     "type":  "object",
+                                     "required":  [
+                                                      "host",
+                                                      "port",
+                                                      "database"
+                                                  ],
+                                     "title":  "MongoDBCollectionRequest"
+                                 },
+    "MongoDBConnection":  {
+                              "properties":  {
+                                                 "host":  {
+                                                              "type":  "string",
+                                                              "title":  "Host"
+                                                          },
+                                                 "port":  {
+                                                              "type":  "integer",
+                                                              "title":  "Port"
+                                                          },
+                                                 "username":  {
+                                                                  "anyOf":  [
+                                                                                {
+                                                                                    "type":  "string"
+                                                                                },
+                                                                                {
+                                                                                    "type":  "null"
+                                                                                }
+                                                                            ],
+                                                                  "title":  "Username"
+                                                              },
+                                                 "password":  {
+                                                                  "anyOf":  [
+                                                                                {
+                                                                                    "type":  "string"
+                                                                                },
+                                                                                {
+                                                                                    "type":  "null"
+                                                                                }
+                                                                            ],
+                                                                  "title":  "Password"
+                                                              }
+                                             },
+                              "type":  "object",
+                              "required":  [
+                                               "host",
+                                               "port"
+                                           ],
+                              "title":  "MongoDBConnection"
+                          },
+    "MongoDBFieldRequest":  {
+                                "properties":  {
+                                                   "host":  {
+                                                                "type":  "string",
+                                                                "title":  "Host"
+                                                            },
+                                                   "port":  {
+                                                                "type":  "integer",
+                                                                "title":  "Port"
+                                                            },
+                                                   "username":  {
+                                                                    "anyOf":  [
+                                                                                  {
+                                                                                      "type":  "string"
+                                                                                  },
+                                                                                  {
+                                                                                      "type":  "null"
+                                                                                  }
+                                                                              ],
+                                                                    "title":  "Username"
+                                                                },
+                                                   "password":  {
+                                                                    "anyOf":  [
+                                                                                  {
+                                                                                      "type":  "string"
+                                                                                  },
+                                                                                  {
+                                                                                      "type":  "null"
+                                                                                  }
+                                                                              ],
+                                                                    "title":  "Password"
+                                                                },
+                                                   "database":  {
+                                                                    "type":  "string",
+                                                                    "title":  "Database"
+                                                                },
+                                                   "collection":  {
+                                                                      "type":  "string",
+                                                                      "title":  "Collection"
+                                                                  }
+                                               },
+                                "type":  "object",
+                                "required":  [
+                                                 "host",
+                                                 "port",
+                                                 "database",
+                                                 "collection"
+                                             ],
+                                "title":  "MongoDBFieldRequest"
+                            },
+    "MySQLColumnRequest":  {
+                               "properties":  {
+                                                  "host":  {
+                                                               "type":  "string",
+                                                               "title":  "Host"
+                                                           },
+                                                  "port":  {
+                                                               "type":  "integer",
+                                                               "title":  "Port"
+                                                           },
+                                                  "username":  {
+                                                                   "type":  "string",
+                                                                   "title":  "Username"
+                                                               },
+                                                  "password":  {
+                                                                   "type":  "string",
+                                                                   "title":  "Password"
+                                                               },
+                                                  "database":  {
+                                                                   "type":  "string",
+                                                                   "title":  "Database"
+                                                               },
+                                                  "table":  {
+                                                                "type":  "string",
+                                                                "title":  "Table"
+                                                            }
+                                              },
+                               "type":  "object",
+                               "required":  [
+                                                "host",
+                                                "port",
+                                                "username",
+                                                "password",
+                                                "database",
+                                                "table"
+                                            ],
+                               "title":  "MySQLColumnRequest"
+                           },
+    "MySQLConnection":  {
+                            "properties":  {
+                                               "host":  {
+                                                            "type":  "string",
+                                                            "title":  "Host"
+                                                        },
+                                               "port":  {
+                                                            "type":  "integer",
+                                                            "title":  "Port"
+                                                        },
+                                               "username":  {
+                                                                "type":  "string",
+                                                                "title":  "Username"
+                                                            },
+                                               "password":  {
+                                                                "type":  "string",
+                                                                "title":  "Password"
+                                                            }
+                                           },
+                            "type":  "object",
+                            "required":  [
+                                             "host",
+                                             "port",
+                                             "username",
+                                             "password"
+                                         ],
+                            "title":  "MySQLConnection"
+                        },
+    "MySQLTableRequest":  {
+                              "properties":  {
+                                                 "host":  {
+                                                              "type":  "string",
+                                                              "title":  "Host"
+                                                          },
+                                                 "port":  {
+                                                              "type":  "integer",
+                                                              "title":  "Port"
+                                                          },
+                                                 "username":  {
+                                                                  "type":  "string",
+                                                                  "title":  "Username"
+                                                              },
+                                                 "password":  {
+                                                                  "type":  "string",
+                                                                  "title":  "Password"
+                                                              },
+                                                 "database":  {
+                                                                  "type":  "string",
+                                                                  "title":  "Database"
+                                                              }
+                                             },
+                              "type":  "object",
+                              "required":  [
+                                               "host",
+                                               "port",
+                                               "username",
+                                               "password",
+                                               "database"
+                                           ],
+                              "title":  "MySQLTableRequest"
+                          },
+    "ReportAggregation":  {
+                              "properties":  {
+                                                 "function":  {
+                                                                  "type":  "string",
+                                                                  "title":  "Function"
+                                                              },
+                                                 "field":  {
+                                                               "type":  "string",
+                                                               "title":  "Field"
+                                                           },
+                                                 "alias":  {
+                                                               "anyOf":  [
+                                                                             {
+                                                                                 "type":  "string"
+                                                                             },
+                                                                             {
+                                                                                 "type":  "null"
+                                                                             }
+                                                                         ],
+                                                               "title":  "Alias"
+                                                           }
+                                             },
+                              "type":  "object",
+                              "required":  [
+                                               "function",
+                                               "field"
+                                           ],
+                              "title":  "ReportAggregation"
+                          },
+    "ReportColumn":  {
+                         "properties":  {
+                                            "field":  {
+                                                          "type":  "string",
+                                                          "title":  "Field"
+                                                      },
+                                            "alias":  {
+                                                          "anyOf":  [
+                                                                        {
+                                                                            "type":  "string"
+                                                                        },
+                                                                        {
+                                                                            "type":  "null"
+                                                                        }
+                                                                    ],
+                                                          "title":  "Alias"
+                                                      }
+                                        },
+                         "type":  "object",
+                         "required":  [
+                                          "field"
+                                      ],
+                         "title":  "ReportColumn"
+                     },
+    "ReportFilter":  {
+                         "properties":  {
+                                            "field":  {
+                                                          "type":  "string",
+                                                          "title":  "Field"
+                                                      },
+                                            "operator":  {
+                                                             "type":  "string",
+                                                             "title":  "Operator"
+                                                         },
+                                            "value":  {
+                                                          "title":  "Value"
+                                                      },
+                                            "logic":  {
+                                                          "type":  "string",
+                                                          "title":  "Logic",
+                                                          "default":  "AND"
+                                                      }
+                                        },
+                         "type":  "object",
+                         "required":  [
+                                          "field",
+                                          "operator"
+                                      ],
+                         "title":  "ReportFilter"
+                     },
+    "ReportQueryRequest":  {
+                               "properties":  {
+                                                  "datasets":  {
+                                                                   "items":  {
+                                                                                 "$ref":  "#/components/schemas/DatasetDefinition"
+                                                                             },
+                                                                   "type":  "array",
+                                                                   "title":  "Datasets"
+                                                               },
+                                                  "joins":  {
+                                                                "items":  {
+                                                                              "$ref":  "#/components/schemas/JoinDefinition"
+                                                                          },
+                                                                "type":  "array",
+                                                                "title":  "Joins"
+                                                            },
+                                                  "columns":  {
+                                                                  "items":  {
+                                                                                "$ref":  "#/components/schemas/ReportColumn"
+                                                                            },
+                                                                  "type":  "array",
+                                                                  "title":  "Columns"
+                                                              },
+                                                  "filters":  {
+                                                                  "items":  {
+                                                                                "$ref":  "#/components/schemas/ReportFilter"
+                                                                            },
+                                                                  "type":  "array",
+                                                                  "title":  "Filters"
+                                                              },
+                                                  "sorts":  {
+                                                                "items":  {
+                                                                              "$ref":  "#/components/schemas/ReportSort"
+                                                                          },
+                                                                "type":  "array",
+                                                                "title":  "Sorts"
+                                                            },
+                                                  "group_by":  {
+                                                                   "items":  {
+                                                                                 "type":  "string"
+                                                                             },
+                                                                   "type":  "array",
+                                                                   "title":  "Group By"
+                                                               },
+                                                  "aggregations":  {
+                                                                       "items":  {
+                                                                                     "$ref":  "#/components/schemas/ReportAggregation"
+                                                                                 },
+                                                                       "type":  "array",
+                                                                       "title":  "Aggregations"
+                                                                   },
+                                                  "calculated_columns":  {
+                                                                             "items":  {
+                                                                                           "$ref":  "#/components/schemas/CalculatedColumn"
+                                                                                       },
+                                                                             "type":  "array",
+                                                                             "title":  "Calculated Columns"
+                                                                         },
+                                                  "limit":  {
+                                                                "type":  "integer",
+                                                                "title":  "Limit",
+                                                                "default":  5000
+                                                            }
+                                              },
+                               "type":  "object",
+                               "title":  "ReportQueryRequest"
+                           },
+    "ReportSort":  {
+                       "properties":  {
+                                          "field":  {
+                                                        "type":  "string",
+                                                        "title":  "Field"
+                                                    },
+                                          "direction":  {
+                                                            "type":  "string",
+                                                            "title":  "Direction",
+                                                            "default":  "ASC"
+                                                        }
+                                      },
+                       "type":  "object",
+                       "required":  [
+                                        "field"
+                                    ],
+                       "title":  "ReportSort"
+                   },
+    "SavedConnectionPreviewRequest":  {
+                                          "properties":  {
+                                                             "database":  {
+                                                                              "type":  "string",
+                                                                              "title":  "Database"
+                                                                          },
+                                                             "table":  {
+                                                                           "type":  "string",
+                                                                           "title":  "Table"
+                                                                       },
+                                                             "sample_limit":  {
+                                                                                  "type":  "integer",
+                                                                                  "title":  "Sample Limit",
+                                                                                  "default":  25
+                                                                              }
+                                                         },
+                                          "type":  "object",
+                                          "required":  [
+                                                           "database",
+                                                           "table"
+                                                       ],
+                                          "title":  "SavedConnectionPreviewRequest"
+                                      },
+    "SavedConnectionRequest":  {
+                                   "properties":  {
+                                                      "name":  {
+                                                                   "type":  "string",
+                                                                   "title":  "Name"
+                                                               },
+                                                      "source_type":  {
+                                                                          "type":  "string",
+                                                                          "title":  "Source Type"
+                                                                      },
+                                                      "host":  {
+                                                                   "type":  "string",
+                                                                   "title":  "Host"
+                                                               },
+                                                      "port":  {
+                                                                   "type":  "integer",
+                                                                   "title":  "Port"
+                                                               },
+                                                      "username":  {
+                                                                       "anyOf":  [
+                                                                                     {
+                                                                                         "type":  "string"
+                                                                                     },
+                                                                                     {
+                                                                                         "type":  "null"
+                                                                                     }
+                                                                                 ],
+                                                                       "title":  "Username"
+                                                                   },
+                                                      "password":  {
+                                                                       "anyOf":  [
+                                                                                     {
+                                                                                         "type":  "string"
+                                                                                     },
+                                                                                     {
+                                                                                         "type":  "null"
+                                                                                     }
+                                                                                 ],
+                                                                       "title":  "Password"
+                                                                   },
+                                                      "status":  {
+                                                                     "type":  "string",
+                                                                     "title":  "Status",
+                                                                     "default":  "saved"
+                                                                 },
+                                                      "server_version":  {
+                                                                             "type":  "string",
+                                                                             "title":  "Server Version",
+                                                                             "default":  ""
+                                                                         }
+                                                  },
+                                   "type":  "object",
+                                   "required":  [
+                                                    "name",
+                                                    "source_type",
+                                                    "host",
+                                                    "port"
+                                                ],
+                                   "title":  "SavedConnectionRequest"
+                               },
+    "SavedDashboard":  {
+                           "properties":  {
+                                              "id":  {
+                                                         "type":  "string",
+                                                         "title":  "Id"
+                                                     },
+                                              "name":  {
+                                                           "type":  "string",
+                                                           "title":  "Name"
+                                                       },
+                                              "definition":  {
+                                                                 "additionalProperties":  true,
+                                                                 "type":  "object",
+                                                                 "title":  "Definition"
+                                                             }
+                                          },
+                           "type":  "object",
+                           "required":  [
+                                            "id",
+                                            "name",
+                                            "definition"
+                                        ],
+                           "title":  "SavedDashboard"
+                       },
+    "SavedDatasetRequest":  {
+                                "properties":  {
+                                                   "name":  {
+                                                                "anyOf":  [
+                                                                              {
+                                                                                  "type":  "string"
+                                                                              },
+                                                                              {
+                                                                                  "type":  "null"
+                                                                              }
+                                                                          ],
+                                                                "title":  "Name"
+                                                            },
+                                                   "connection_id":  {
+                                                                         "type":  "string",
+                                                                         "title":  "Connection Id"
+                                                                     },
+                                                   "database":  {
+                                                                    "type":  "string",
+                                                                    "title":  "Database"
+                                                                },
+                                                   "object_name":  {
+                                                                       "type":  "string",
+                                                                       "title":  "Object Name"
+                                                                   },
+                                                   "object_type":  {
+                                                                       "type":  "string",
+                                                                       "title":  "Object Type",
+                                                                       "default":  "table"
+                                                                   },
+                                                   "columns":  {
+                                                                   "items":  {
+                                                                                 "additionalProperties":  true,
+                                                                                 "type":  "object"
+                                                                             },
+                                                                   "type":  "array",
+                                                                   "title":  "Columns"
+                                                               }
+                                               },
+                                "type":  "object",
+                                "required":  [
+                                                 "connection_id",
+                                                 "database",
+                                                 "object_name"
+                                             ],
+                                "title":  "SavedDatasetRequest"
+                            },
+    "SavedReport":  {
+                        "properties":  {
+                                           "id":  {
+                                                      "type":  "string",
+                                                      "title":  "Id"
+                                                  },
+                                           "name":  {
+                                                        "type":  "string",
+                                                        "title":  "Name"
+                                                    },
+                                           "definition":  {
+                                                              "additionalProperties":  true,
+                                                              "type":  "object",
+                                                              "title":  "Definition"
+                                                          },
+                                           "created_at":  {
+                                                              "anyOf":  [
+                                                                            {
+                                                                                "type":  "string"
+                                                                            },
+                                                                            {
+                                                                                "type":  "null"
+                                                                            }
+                                                                        ],
+                                                              "title":  "Created At"
+                                                          },
+                                           "updated_at":  {
+                                                              "anyOf":  [
+                                                                            {
+                                                                                "type":  "string"
+                                                                            },
+                                                                            {
+                                                                                "type":  "null"
+                                                                            }
+                                                                        ],
+                                                              "title":  "Updated At"
+                                                          }
+                                       },
+                        "type":  "object",
+                        "required":  [
+                                         "id",
+                                         "name",
+                                         "definition"
+                                     ],
+                        "title":  "SavedReport"
+                    },
+    "UserCreateRequest":  {
+                              "properties":  {
+                                                 "username":  {
+                                                                  "type":  "string",
+                                                                  "maxLength":  100,
+                                                                  "minLength":  3,
+                                                                  "title":  "Username"
+                                                              },
+                                                 "password":  {
+                                                                  "type":  "string",
+                                                                  "maxLength":  1024,
+                                                                  "minLength":  8,
+                                                                  "title":  "Password"
+                                                              },
+                                                 "role":  {
+                                                              "type":  "string",
+                                                              "maxLength":  30,
+                                                              "minLength":  1,
+                                                              "title":  "Role",
+                                                              "default":  "custom"
+                                                          },
+                                                 "permissions":  {
+                                                                     "items":  {
+                                                                                   "type":  "string"
+                                                                               },
+                                                                     "type":  "array",
+                                                                     "title":  "Permissions"
+                                                                 }
+                                             },
+                              "type":  "object",
+                              "required":  [
+                                               "username",
+                                               "password"
+                                           ],
+                              "title":  "UserCreateRequest"
+                          },
+    "UserUpdateRequest":  {
+                              "properties":  {
+                                                 "role":  {
+                                                              "anyOf":  [
+                                                                            {
+                                                                                "type":  "string",
+                                                                                "maxLength":  30,
+                                                                                "minLength":  1
+                                                                            },
+                                                                            {
+                                                                                "type":  "null"
+                                                                            }
+                                                                        ],
+                                                              "title":  "Role"
+                                                          },
+                                                 "password":  {
+                                                                  "anyOf":  [
+                                                                                {
+                                                                                    "type":  "string",
+                                                                                    "maxLength":  1024,
+                                                                                    "minLength":  8
+                                                                                },
+                                                                                {
+                                                                                    "type":  "null"
+                                                                                }
+                                                                            ],
+                                                                  "title":  "Password"
+                                                              },
+                                                 "permissions":  {
+                                                                     "anyOf":  [
+                                                                                   {
+                                                                                       "items":  {
+                                                                                                     "type":  "string"
+                                                                                                 },
+                                                                                       "type":  "array"
+                                                                                   },
+                                                                                   {
+                                                                                       "type":  "null"
+                                                                                   }
+                                                                               ],
+                                                                     "title":  "Permissions"
+                                                                 },
+                                                 "active":  {
+                                                                "anyOf":  [
+                                                                              {
+                                                                                  "type":  "boolean"
+                                                                              },
+                                                                              {
+                                                                                  "type":  "null"
+                                                                              }
+                                                                          ],
+                                                                "title":  "Active"
+                                                            }
+                                             },
+                              "type":  "object",
+                              "title":  "UserUpdateRequest"
+                          },
+    "ValidationError":  {
+                            "properties":  {
+                                               "loc":  {
+                                                           "items":  {
+                                                                         "anyOf":  [
+                                                                                       {
+                                                                                           "type":  "string"
+                                                                                       },
+                                                                                       {
+                                                                                           "type":  "integer"
+                                                                                       }
+                                                                                   ]
+                                                                     },
+                                                           "type":  "array",
+                                                           "title":  "Location"
+                                                       },
+                                               "msg":  {
+                                                           "type":  "string",
+                                                           "title":  "Message"
+                                                       },
+                                               "type":  {
+                                                            "type":  "string",
+                                                            "title":  "Error Type"
+                                                        },
+                                               "input":  {
+                                                             "title":  "Input"
+                                                         },
+                                               "ctx":  {
+                                                           "type":  "object",
+                                                           "title":  "Context"
+                                                       }
+                                           },
+                            "type":  "object",
+                            "required":  [
+                                             "loc",
+                                             "msg",
+                                             "type"
+                                         ],
+                            "title":  "ValidationError"
+                        },
+    "VisualizationFieldsRequest":  {
+                                       "properties":  {
+                                                          "columns":  {
+                                                                          "items":  {
+                                                                                        "type":  "string"
+                                                                                    },
+                                                                          "type":  "array",
+                                                                          "title":  "Columns"
+                                                                      },
+                                                          "rows":  {
+                                                                       "items":  {
+                                                                                     "additionalProperties":  true,
+                                                                                     "type":  "object"
+                                                                                 },
+                                                                       "type":  "array",
+                                                                       "title":  "Rows"
+                                                                   },
+                                                          "column_profiles":  {
+                                                                                  "items":  {
+                                                                                                "additionalProperties":  true,
+                                                                                                "type":  "object"
+                                                                                            },
+                                                                                  "type":  "array",
+                                                                                  "title":  "Column Profiles"
+                                                                              }
+                                                      },
+                                       "type":  "object",
+                                       "title":  "VisualizationFieldsRequest"
+                                   },
+    "VisualizationRequest":  {
+                                 "properties":  {
+                                                    "result":  {
+                                                                   "additionalProperties":  true,
+                                                                   "type":  "object",
+                                                                   "title":  "Result"
+                                                               },
+                                                    "visualization":  {
+                                                                          "type":  "string",
+                                                                          "title":  "Visualization",
+                                                                          "default":  "table"
+                                                                      },
+                                                    "category_field":  {
+                                                                           "anyOf":  [
+                                                                                         {
+                                                                                             "type":  "string"
+                                                                                         },
+                                                                                         {
+                                                                                             "type":  "null"
+                                                                                         }
+                                                                                     ],
+                                                                           "title":  "Category Field"
+                                                                       },
+                                                    "value_field":  {
+                                                                        "anyOf":  [
+                                                                                      {
+                                                                                          "type":  "string"
+                                                                                      },
+                                                                                      {
+                                                                                          "type":  "null"
+                                                                                      }
+                                                                                  ],
+                                                                        "title":  "Value Field"
+                                                                    },
+                                                    "aggregation":  {
+                                                                        "type":  "string",
+                                                                        "title":  "Aggregation",
+                                                                        "default":  "SUM"
+                                                                    },
+                                                    "limit":  {
+                                                                  "type":  "integer",
+                                                                  "title":  "Limit",
+                                                                  "default":  20
+                                                              },
+                                                    "bins":  {
+                                                                 "type":  "integer",
+                                                                 "title":  "Bins",
+                                                                 "default":  6
+                                                             },
+                                                    "sort_direction":  {
+                                                                           "anyOf":  [
+                                                                                         {
+                                                                                             "type":  "string"
+                                                                                         },
+                                                                                         {
+                                                                                             "type":  "null"
+                                                                                         }
+                                                                                     ],
+                                                                           "title":  "Sort Direction"
+                                                                       }
+                                                },
+                                 "type":  "object",
+                                 "required":  [
+                                                  "result"
+                                              ],
+                                 "title":  "VisualizationRequest"
+                             }
+}

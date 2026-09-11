@@ -1,0 +1,327 @@
+﻿{
+    "openapi":  "3.1.0",
+    "info":  {
+                 "title":  "Custom Reporting Tool",
+                 "description":  "Multi-source visual reporting engine with multi-dataset JOINs.",
+                 "version":  "0.8.0"
+             },
+    "paths":  {
+                  "/system/capacity":  {
+                                           "get":  "@{summary=Report Capacity Configuration; operationId=report_capacity_system_capacity_get; responses=; security=System.Object[]}"
+                                       },
+                  "/admin/backups":  {
+                                         "get":  "@{summary=List Application Backups; operationId=list_application_backups_admin_backups_get; responses=; security=System.Object[]}",
+                                         "post":  "@{summary=Create Application Backup; operationId=create_application_backup_admin_backups_post; responses=; security=System.Object[]}"
+                                     },
+                  "/admin/backups/recovery-test":  {
+                                                       "post":  "@{summary=Validate and Stage Backup; operationId=test_application_backup_recovery_admin_backups_recovery_test_post; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                   },
+                  "/admin/backups/retention":  {
+                                                   "post":  "@{summary=Apply Backup Retention; operationId=apply_backup_retention_admin_backups_retention_post; responses=; security=System.Object[]}"
+                                               },
+                  "/admin/backups/external-copy":  {
+                                                       "post":  "@{summary=Copy Backup to External Target; operationId=copy_backup_external_admin_backups_external_copy_post; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                   },
+                  "/admin/audit-log":  {
+                                           "get":  "@{summary=Read Audit Log; operationId=read_audit_log_admin_audit_log_get; responses=; security=System.Object[]}"
+                                       },
+                  "/auth/login":  {
+                                      "post":  "@{tags=System.Object[]; summary=Login; operationId=login_auth_login_post; requestBody=; responses=}"
+                                  },
+                  "/auth/permissions":  {
+                                            "get":  "@{tags=System.Object[]; summary=Available Permissions; operationId=available_permissions_auth_permissions_get; responses=; security=System.Object[]}"
+                                        },
+                  "/auth/users":  {
+                                      "get":  "@{tags=System.Object[]; summary=List Users; operationId=users_list_auth_users_get; responses=; security=System.Object[]}",
+                                      "post":  "@{tags=System.Object[]; summary=Create User; operationId=users_create_auth_users_post; requestBody=; responses=; security=System.Object[]}"
+                                  },
+                  "/auth/users/{user_id}":  {
+                                                "put":  "@{tags=System.Object[]; summary=Update User; operationId=users_update_auth_users__user_id__put; security=System.Object[]; parameters=System.Object[]; requestBody=; responses=}",
+                                                "delete":  "@{tags=System.Object[]; summary=Delete User; operationId=users_delete_auth_users__user_id__delete; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                            },
+                  "/auth/me":  {
+                                   "get":  "@{tags=System.Object[]; summary=Current User; operationId=current_user_auth_me_get; responses=; security=System.Object[]}"
+                               },
+                  "/auth/logout":  {
+                                       "post":  "@{tags=System.Object[]; summary=Logout; operationId=logout_auth_logout_post; responses=; security=System.Object[]}"
+                                   },
+                  "/":  {
+                            "get":  "@{summary=Home; operationId=home__get; responses=}"
+                        },
+                  "/health":  {
+                                  "get":  "@{summary=Health; description=Liveness probe: the process is running and serving requests.; operationId=health_health_get; responses=}"
+                              },
+                  "/ready":  {
+                                 "get":  "@{summary=Readiness; description=Readiness probe for load balancers and container orchestrators.; operationId=readiness_ready_get; responses=}"
+                             },
+                  "/datasource/connectors":  {
+                                                 "get":  "@{summary=Datasource Connectors; description=List connector types available to the reporting engine.; operationId=datasource_connectors_datasource_connectors_get; responses=; security=System.Object[]}"
+                                             },
+                  "/datasource/test":  {
+                                           "post":  "@{summary=Datasource Test Endpoint; operationId=datasource_test_endpoint_datasource_test_post; requestBody=; responses=; security=System.Object[]}"
+                                       },
+                  "/datasource/databases":  {
+                                                "post":  "@{summary=Datasource Databases Endpoint; operationId=datasource_databases_endpoint_datasource_databases_post; requestBody=; responses=; security=System.Object[]}"
+                                            },
+                  "/datasource/tables":  {
+                                             "post":  "@{summary=Datasource Tables Endpoint; operationId=datasource_tables_endpoint_datasource_tables_post; requestBody=; responses=; security=System.Object[]}"
+                                         },
+                  "/datasource/columns":  {
+                                              "post":  "@{summary=Datasource Columns Endpoint; operationId=datasource_columns_endpoint_datasource_columns_post; requestBody=; responses=; security=System.Object[]}"
+                                          },
+                  "/datasource/preview":  {
+                                              "post":  "@{summary=Datasource Preview Endpoint; operationId=datasource_preview_endpoint_datasource_preview_post; requestBody=; responses=; security=System.Object[]}"
+                                          },
+                  "/datasource/connections":  {
+                                                  "get":  "@{summary=Saved Connections; operationId=saved_connections_datasource_connections_get; responses=; security=System.Object[]}",
+                                                  "post":  "@{summary=Create Saved Connection; operationId=create_saved_connection_datasource_connections_post; requestBody=; responses=; security=System.Object[]}"
+                                              },
+                  "/datasource/connections/{connection_id}":  {
+                                                                  "put":  "@{summary=Update Saved Connection; operationId=update_saved_connection_datasource_connections__connection_id__put; security=System.Object[]; parameters=System.Object[]; requestBody=; responses=}",
+                                                                  "delete":  "@{summary=Delete Saved Connection; operationId=delete_saved_connection_datasource_connections__connection_id__delete; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                              },
+                  "/datasource/connections/{connection_id}/test":  {
+                                                                       "post":  "@{summary=Test Saved Connection; operationId=test_saved_connection_datasource_connections__connection_id__test_post; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                                   },
+                  "/datasource/connections/{connection_id}/databases":  {
+                                                                            "get":  "@{summary=Saved Connection Database List; operationId=saved_connection_database_list_datasource_connections__connection_id__databases_get; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                                        },
+                  "/datasource/connections/{connection_id}/databases/{database}/tables":  {
+                                                                                              "get":  "@{summary=Saved Connection Table List; operationId=saved_connection_table_list_datasource_connections__connection_id__databases__database__tables_get; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                                                          },
+                  "/datasource/connections/{connection_id}/databases/{database}/tables/{table}/columns":  {
+                                                                                                              "get":  "@{summary=Saved Connection Column List; operationId=saved_connection_column_list_datasource_connections__connection_id__databases__database__tables__table__columns_get; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                                                                          },
+                  "/datasource/connections/{connection_id}/preview":  {
+                                                                          "post":  "@{summary=Saved Connection Table Preview; operationId=saved_connection_table_preview_datasource_connections__connection_id__preview_post; security=System.Object[]; parameters=System.Object[]; requestBody=; responses=}"
+                                                                      },
+                  "/datasource/connections/access":  {
+                                                         "get":  "@{summary=List Connection Access; operationId=list_connection_access_endpoint_datasource_connections_access_get; responses=; security=System.Object[]}"
+                                                     },
+                  "/datasource/connections/{connection_id}/access":  {
+                                                                         "get":  "@{summary=Get Connection Access; operationId=get_connection_access_endpoint_datasource_connections__connection_id__access_get; security=System.Object[]; parameters=System.Object[]; responses=}",
+                                                                         "put":  "@{summary=Set Connection Access; operationId=set_connection_access_endpoint_datasource_connections__connection_id__access_put; security=System.Object[]; parameters=System.Object[]; requestBody=; responses=}"
+                                                                     },
+                  "/datasets":  {
+                                    "get":  "@{summary=List Saved Datasets; operationId=list_saved_datasets_datasets_get; responses=; security=System.Object[]}",
+                                    "post":  "@{summary=Create Saved Dataset; operationId=create_saved_dataset_datasets_post; requestBody=; responses=; security=System.Object[]}"
+                                },
+                  "/datasets/catalog":  {
+                                            "get":  "@{summary=List Dataset Catalog; description=Return connector-backed and imported datasets in one query-builder catalog.; operationId=list_dataset_catalog_datasets_catalog_get; responses=; security=System.Object[]}"
+                                        },
+                  "/datasets/{dataset_id}":  {
+                                                 "get":  "@{summary=Get Saved Dataset; operationId=get_saved_dataset_datasets__dataset_id__get; security=System.Object[]; parameters=System.Object[]; responses=}",
+                                                 "put":  "@{summary=Update Saved Dataset; operationId=update_saved_dataset_datasets__dataset_id__put; security=System.Object[]; parameters=System.Object[]; requestBody=; responses=}",
+                                                 "delete":  "@{summary=Delete Saved Dataset; operationId=delete_saved_dataset_datasets__dataset_id__delete; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                             },
+                  "/report/capabilities":  {
+                                               "get":  "@{summary=Capabilities; operationId=capabilities_report_capabilities_get; responses=; security=System.Object[]}"
+                                           },
+                  "/report/visualization/fields":  {
+                                                       "post":  "@{summary=Report Visualization Fields; operationId=report_visualization_fields_report_visualization_fields_post; requestBody=; responses=; security=System.Object[]}"
+                                                   },
+                  "/report/visualization/preview":  {
+                                                        "post":  "@{summary=Report Visualization Preview; operationId=report_visualization_preview_report_visualization_preview_post; requestBody=; responses=; security=System.Object[]}"
+                                                    },
+                  "/dataset/preview":  {
+                                           "post":  "@{summary=Dataset Preview; operationId=dataset_preview_dataset_preview_post; requestBody=; responses=; security=System.Object[]}"
+                                       },
+                  "/data/import":  {
+                                       "post":  "@{summary=Import Data Endpoint; operationId=import_data_endpoint_data_import_post; requestBody=; responses=; security=System.Object[]}"
+                                   },
+                  "/data/imported":  {
+                                         "get":  "@{summary=List Imported Data; operationId=list_imported_data_data_imported_get; responses=; security=System.Object[]}"
+                                     },
+                  "/data/imported/{dataset_id}":  {
+                                                      "get":  "@{summary=Get Imported Data; operationId=get_imported_data_data_imported__dataset_id__get; security=System.Object[]; parameters=System.Object[]; responses=}",
+                                                      "put":  "@{summary=Update Imported Data; operationId=update_imported_data_data_imported__dataset_id__put; security=System.Object[]; parameters=System.Object[]; requestBody=; responses=}",
+                                                      "delete":  "@{summary=Delete Imported Data; operationId=delete_imported_data_data_imported__dataset_id__delete; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                  },
+                  "/reports":  {
+                                   "get":  "@{summary=List Reports; operationId=list_reports_reports_get; responses=; security=System.Object[]}",
+                                   "post":  "@{summary=Save Report; operationId=save_report_reports_post; requestBody=; responses=; security=System.Object[]}"
+                               },
+                  "/reports/{report_id}":  {
+                                               "get":  "@{summary=Get Report; operationId=get_report_reports__report_id__get; security=System.Object[]; parameters=System.Object[]; responses=}",
+                                               "delete":  "@{summary=Delete Report; operationId=delete_report_reports__report_id__delete; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                           },
+                  "/reports/{report_id}/duplicate":  {
+                                                         "post":  "@{summary=Duplicate Report; operationId=duplicate_report_reports__report_id__duplicate_post; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                     },
+                  "/dashboards":  {
+                                      "get":  "@{summary=List Dashboards; operationId=list_dashboards_dashboards_get; responses=; security=System.Object[]}",
+                                      "post":  "@{summary=Save Dashboard; operationId=save_dashboard_dashboards_post; requestBody=; responses=; security=System.Object[]}"
+                                  },
+                  "/dashboards/{dashboard_id}":  {
+                                                     "get":  "@{summary=Get Dashboard; operationId=get_dashboard_dashboards__dashboard_id__get; security=System.Object[]; parameters=System.Object[]; responses=}",
+                                                     "delete":  "@{summary=Delete Dashboard; operationId=delete_dashboard_dashboards__dashboard_id__delete; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                 },
+                  "/dashboards/{dashboard_id}/shares":  {
+                                                            "get":  "@{summary=List Dashboard Shares; operationId=list_dashboard_shares_dashboards__dashboard_id__shares_get; security=System.Object[]; parameters=System.Object[]; responses=}",
+                                                            "post":  "@{summary=Add Dashboard Share; operationId=add_dashboard_share_dashboards__dashboard_id__shares_post; security=System.Object[]; parameters=System.Object[]; requestBody=; responses=}"
+                                                        },
+                  "/dashboards/{dashboard_id}/shares/{shared_with_id}":  {
+                                                                             "delete":  "@{summary=Remove Dashboard Share; operationId=remove_dashboard_share_dashboards__dashboard_id__shares__shared_with_id__delete; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                                         },
+                  "/dashboards/export/{format}":  {
+                                                      "post":  "@{summary=Export Current Dashboard; description=Export the dashboard currently open in the editor without requiring it to be saved first.; operationId=export_current_dashboard_dashboards_export__format__post; security=System.Object[]; parameters=System.Object[]; requestBody=; responses=}"
+                                                  },
+                  "/dashboards/{dashboard_id}/export/json":  {
+                                                                 "get":  "@{summary=Export Saved Dashboard Json; operationId=export_saved_dashboard_json_dashboards__dashboard_id__export_json_get; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                             },
+                  "/dashboards/{dashboard_id}/export/xlsx":  {
+                                                                 "get":  "@{summary=Export Saved Dashboard Xlsx; operationId=export_saved_dashboard_xlsx_dashboards__dashboard_id__export_xlsx_get; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                             },
+                  "/dashboards/{dashboard_id}/export/pdf":  {
+                                                                "get":  "@{summary=Export Saved Dashboard Pdf; operationId=export_saved_dashboard_pdf_dashboards__dashboard_id__export_pdf_get; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                            },
+                  "/dashboards/{dashboard_id}/export/package":  {
+                                                                    "get":  "@{summary=Export Saved Dashboard Package; operationId=export_saved_dashboard_package_dashboards__dashboard_id__export_package_get; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                                },
+                  "/dashboards/{dashboard_id}/export/csv":  {
+                                                                "get":  "@{summary=Export Saved Dashboard Csv; operationId=export_saved_dashboard_csv_dashboards__dashboard_id__export_csv_get; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                            },
+                  "/report/export/csv":  {
+                                             "post":  "@{summary=Export Csv; description=Legacy CSV endpoint using the canonical job/result pipeline.; operationId=export_csv_report_export_csv_post; requestBody=; responses=; security=System.Object[]}"
+                                         },
+                  "/datasource/mysql/test":  {
+                                                 "post":  "@{summary=Test Mysql; operationId=test_mysql_datasource_mysql_test_post; requestBody=; responses=; security=System.Object[]}"
+                                             },
+                  "/datasource/mysql/tables":  {
+                                                   "post":  "@{summary=Mysql Tables; operationId=mysql_tables_datasource_mysql_tables_post; requestBody=; responses=; security=System.Object[]}"
+                                               },
+                  "/datasource/mysql/columns":  {
+                                                    "post":  "@{summary=Mysql Columns; operationId=mysql_columns_datasource_mysql_columns_post; requestBody=; responses=; security=System.Object[]}"
+                                                },
+                  "/datasource/mongodb/test":  {
+                                                   "post":  "@{summary=Test Mongodb; operationId=test_mongodb_datasource_mongodb_test_post; requestBody=; responses=; security=System.Object[]}"
+                                               },
+                  "/datasource/mongodb/collections":  {
+                                                          "post":  "@{summary=Mongodb Collections; operationId=mongodb_collections_datasource_mongodb_collections_post; requestBody=; responses=; security=System.Object[]}"
+                                                      },
+                  "/datasource/mongodb/fields":  {
+                                                     "post":  "@{summary=Mongodb Fields; operationId=mongodb_fields_datasource_mongodb_fields_post; requestBody=; responses=; security=System.Object[]}"
+                                                 },
+                  "/datasource/clickhouse/test":  {
+                                                      "post":  "@{summary=Test Clickhouse; operationId=test_clickhouse_datasource_clickhouse_test_post; requestBody=; responses=; security=System.Object[]}"
+                                                  },
+                  "/datasource/clickhouse/databases":  {
+                                                           "post":  "@{summary=Clickhouse Databases; operationId=clickhouse_databases_datasource_clickhouse_databases_post; requestBody=; responses=; security=System.Object[]}"
+                                                       },
+                  "/datasource/clickhouse/tables":  {
+                                                        "post":  "@{summary=Clickhouse Tables; operationId=clickhouse_tables_datasource_clickhouse_tables_post; requestBody=; responses=; security=System.Object[]}"
+                                                    },
+                  "/datasource/clickhouse/columns":  {
+                                                         "post":  "@{summary=Clickhouse Columns; operationId=clickhouse_columns_datasource_clickhouse_columns_post; requestBody=; responses=; security=System.Object[]}"
+                                                     },
+                  "/datasource/clickhouse/preview":  {
+                                                         "post":  "@{summary=Clickhouse Preview; operationId=clickhouse_preview_datasource_clickhouse_preview_post; requestBody=; responses=; security=System.Object[]}"
+                                                     },
+                  "/join/execute":  {
+                                        "post":  "@{summary=Legacy Join Execute; description=Backward-compatible two-dataset JOIN endpoint.; operationId=legacy_join_execute_join_execute_post; requestBody=; responses=; security=System.Object[]}"
+                                    },
+                  "/report/query":  {
+                                        "post":  "@{summary=Report Query; operationId=report_query_report_query_post; requestBody=; responses=; security=System.Object[]}"
+                                    },
+                  "/report/query/plan":  {
+                                             "post":  "@{summary=Report Query Plan; description=Return the canonical execution plan after validating dataset access.; operationId=report_query_plan_report_query_plan_post; requestBody=; responses=; security=System.Object[]}"
+                                         },
+                  "/lineage/reports/{report_id}":  {
+                                                       "get":  "@{summary=Get Report Lineage; description=Return lineage for a saved report after ownership/access validation.; operationId=get_report_lineage_lineage_reports__report_id__get; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                   },
+                  "/lineage/jobs/{job_id}":  {
+                                                 "get":  "@{summary=Get Execution Job Lineage; description=Return lineage for an execution job after job ACL validation.; operationId=get_execution_job_lineage_lineage_jobs__job_id__get; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                             },
+                  "/execution/jobs":  {
+                                          "get":  "@{summary=List Report Jobs; operationId=list_report_jobs_execution_jobs_get; responses=; security=System.Object[]}",
+                                          "post":  "@{summary=Create Report Job; description=Queue a canonical report query and record its execution lineage.; operationId=create_report_job_execution_jobs_post; requestBody=; responses=; security=System.Object[]}"
+                                      },
+                  "/execution/jobs/{job_id}":  {
+                                                   "get":  "@{summary=Get Report Job; operationId=get_report_job_execution_jobs__job_id__get; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                               },
+                  "/execution/jobs/{job_id}/result":  {
+                                                          "get":  "@{summary=Get Report Job Result; description=Return a bounded page of rows from a completed report job.\n\nThis endpoint is additive and does not change the existing job-status\nresponse. It is intended for large result sets so clients can consume\nrows incrementally instead of requesting the complete result at once.; operationId=get_report_job_result_execution_jobs__job_id__result_get; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                      },
+                  "/execution/jobs/{job_id}/transform":  {
+                                                             "post":  "@{summary=Transform Report Job; description=Queue a derived execution while reusing the original QueryDefinition.\n\nThis keeps interactive Filter/Sort/Group operations server-side and avoids\nsending the original dataset/connection definition back from the browser.; operationId=transform_report_job_execution_jobs__job_id__transform_post; security=System.Object[]; parameters=System.Object[]; requestBody=; responses=}"
+                                                         },
+                  "/execution/jobs/{job_id}/export":  {
+                                                          "post":  "@{summary=Create Report Export Job; description=Queue a complete CSV/JSON export from the completed execution result.; operationId=create_report_export_job_execution_jobs__job_id__export_post; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                      },
+                  "/execution/exports/{export_id}":  {
+                                                         "get":  "@{summary=Get Report Export Job; operationId=get_report_export_job_execution_exports__export_id__get; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                     },
+                  "/execution/exports/{export_id}/cancel":  {
+                                                                "post":  "@{summary=Cancel Report Export Job; operationId=cancel_report_export_job_execution_exports__export_id__cancel_post; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                            },
+                  "/execution/exports/{export_id}/download":  {
+                                                                  "get":  "@{summary=Download Report Export Job; operationId=download_report_export_job_execution_exports__export_id__download_get; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                              },
+                  "/execution/jobs/{job_id}/export/csv":  {
+                                                              "get":  "@{summary=Export Report Job Csv; operationId=export_report_job_csv_execution_jobs__job_id__export_csv_get; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                          },
+                  "/execution/jobs/{job_id}/export/json":  {
+                                                               "get":  "@{summary=Export Report Job Json; operationId=export_report_job_json_execution_jobs__job_id__export_json_get; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                           },
+                  "/execution/jobs/{job_id}/export/pdf":  {
+                                                              "get":  "@{summary=Export Report Job Pdf; description=Re-execute the completed job without an application row ceiling and create PDF.; operationId=export_report_job_pdf_execution_jobs__job_id__export_pdf_get; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                          },
+                  "/execution/jobs/{job_id}/dashboard":  {
+                                                             "get":  "@{summary=Report Job Dashboard; description=Build a bounded visualization payload from a completed job result.\n\nThis is the dashboard integration boundary for Change #12. It deliberately\nuses a bounded page so dashboard rendering never transfers an unbounded\nresult set to the browser.; operationId=report_job_dashboard_execution_jobs__job_id__dashboard_get; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                         },
+                  "/execution/jobs/{job_id}/cancel":  {
+                                                          "post":  "@{summary=Cancel Report Job; operationId=cancel_report_job_execution_jobs__job_id__cancel_post; security=System.Object[]; parameters=System.Object[]; responses=}"
+                                                      },
+                  "/system/security":  {
+                                           "get":  "@{summary=Security Runtime Status; description=Return non-secret security configuration for administrators.; operationId=security_runtime_status_system_security_get; responses=; security=System.Object[]}"
+                                       }
+              },
+    "components":  {
+                       "schemas":  {
+                                       "Body_import_data_endpoint_data_import_post":  "@{properties=; type=object; required=System.Object[]; title=Body_import_data_endpoint_data_import_post}",
+                                       "CalculatedColumn":  "@{properties=; type=object; required=System.Object[]; title=CalculatedColumn}",
+                                       "ClickHouseColumnRequest":  "@{properties=; type=object; required=System.Object[]; title=ClickHouseColumnRequest}",
+                                       "ClickHouseConnection":  "@{properties=; type=object; required=System.Object[]; title=ClickHouseConnection}",
+                                       "ClickHouseTableRequest":  "@{properties=; type=object; required=System.Object[]; title=ClickHouseTableRequest}",
+                                       "ConnectionAccessRequest":  "@{properties=; type=object; title=ConnectionAccessRequest}",
+                                       "DashboardExportRequest":  "@{properties=; type=object; title=DashboardExportRequest}",
+                                       "DashboardShareRequest":  "@{properties=; type=object; required=System.Object[]; title=DashboardShareRequest}",
+                                       "DatasetDefinition":  "@{properties=; type=object; required=System.Object[]; title=DatasetDefinition}",
+                                       "DatasetPreviewRequest":  "@{properties=; type=object; required=System.Object[]; title=DatasetPreviewRequest}",
+                                       "ExecutionTransformRequest":  "@{properties=; type=object; title=ExecutionTransformRequest; description=Operations that can be applied to an existing canonical execution.\n\nThe source datasets, JOIN graph and selected columns stay attached to the\noriginal job. Only relational operations are replaced, so the browser does\nnot need to resend connection metadata for every filter/sort interaction.}",
+                                       "GenericDataSourceColumnRequest":  "@{properties=; type=object; required=System.Object[]; title=GenericDataSourceColumnRequest}",
+                                       "GenericDataSourcePreviewRequest":  "@{properties=; type=object; required=System.Object[]; title=GenericDataSourcePreviewRequest}",
+                                       "GenericDataSourceRequest":  "@{properties=; type=object; required=System.Object[]; title=GenericDataSourceRequest}",
+                                       "GenericDataSourceTableRequest":  "@{properties=; type=object; required=System.Object[]; title=GenericDataSourceTableRequest}",
+                                       "HTTPValidationError":  "@{properties=; type=object; title=HTTPValidationError}",
+                                       "ImportedDatasetUpdateRequest":  "@{properties=; type=object; required=System.Object[]; title=ImportedDatasetUpdateRequest}",
+                                       "JoinDefinition":  "@{properties=; type=object; required=System.Object[]; title=JoinDefinition}",
+                                       "LoginRequest":  "@{properties=; type=object; required=System.Object[]; title=LoginRequest}",
+                                       "LoginResponse":  "@{properties=; type=object; required=System.Object[]; title=LoginResponse}",
+                                       "MongoDBCollectionRequest":  "@{properties=; type=object; required=System.Object[]; title=MongoDBCollectionRequest}",
+                                       "MongoDBConnection":  "@{properties=; type=object; required=System.Object[]; title=MongoDBConnection}",
+                                       "MongoDBFieldRequest":  "@{properties=; type=object; required=System.Object[]; title=MongoDBFieldRequest}",
+                                       "MySQLColumnRequest":  "@{properties=; type=object; required=System.Object[]; title=MySQLColumnRequest}",
+                                       "MySQLConnection":  "@{properties=; type=object; required=System.Object[]; title=MySQLConnection}",
+                                       "MySQLTableRequest":  "@{properties=; type=object; required=System.Object[]; title=MySQLTableRequest}",
+                                       "ReportAggregation":  "@{properties=; type=object; required=System.Object[]; title=ReportAggregation}",
+                                       "ReportColumn":  "@{properties=; type=object; required=System.Object[]; title=ReportColumn}",
+                                       "ReportFilter":  "@{properties=; type=object; required=System.Object[]; title=ReportFilter}",
+                                       "ReportQueryRequest":  "@{properties=; type=object; title=ReportQueryRequest}",
+                                       "ReportSort":  "@{properties=; type=object; required=System.Object[]; title=ReportSort}",
+                                       "SavedConnectionPreviewRequest":  "@{properties=; type=object; required=System.Object[]; title=SavedConnectionPreviewRequest}",
+                                       "SavedConnectionRequest":  "@{properties=; type=object; required=System.Object[]; title=SavedConnectionRequest}",
+                                       "SavedDashboard":  "@{properties=; type=object; required=System.Object[]; title=SavedDashboard}",
+                                       "SavedDatasetRequest":  "@{properties=; type=object; required=System.Object[]; title=SavedDatasetRequest}",
+                                       "SavedReport":  "@{properties=; type=object; required=System.Object[]; title=SavedReport}",
+                                       "UserCreateRequest":  "@{properties=; type=object; required=System.Object[]; title=UserCreateRequest}",
+                                       "UserUpdateRequest":  "@{properties=; type=object; title=UserUpdateRequest}",
+                                       "ValidationError":  "@{properties=; type=object; required=System.Object[]; title=ValidationError}",
+                                       "VisualizationFieldsRequest":  "@{properties=; type=object; title=VisualizationFieldsRequest}",
+                                       "VisualizationRequest":  "@{properties=; type=object; required=System.Object[]; title=VisualizationRequest}"
+                                   },
+                       "securitySchemes":  {
+                                               "BearerAuth":  "@{type=http; scheme=bearer; bearerFormat=JWT}"
+                                           }
+                   }
+}
